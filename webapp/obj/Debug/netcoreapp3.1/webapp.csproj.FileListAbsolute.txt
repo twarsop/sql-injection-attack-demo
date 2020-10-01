@@ -20,8 +20,6 @@ C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debu
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\webapp.TagHelpers.output.cache
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\webapp.RazorCoreGenerate.cache
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
-C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
-C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
