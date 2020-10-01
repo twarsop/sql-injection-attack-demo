@@ -14412,11 +14412,6 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\t_war\\Documents\\projects\\code\\sql-injection-attack-demo\\webapp\\Views\\Shared\\Error.cshtml",
-      "TargetPath": "Views\\Shared\\Error.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "c:\\Users\\t_war\\Documents\\projects\\code\\sql-injection-attack-demo\\webapp\\Views\\Shared\\_ValidationScriptsPartial.cshtml",
       "TargetPath": "Views\\Shared\\_ValidationScriptsPartial.cshtml",
       "FileKind": "mvc"
