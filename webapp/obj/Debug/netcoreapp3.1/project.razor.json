@@ -14402,11 +14402,6 @@
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\t_war\\Documents\\projects\\code\\sql-injection-attack-demo\\webapp\\Views\\Home\\Privacy.cshtml",
-      "TargetPath": "Views\\Home\\Privacy.cshtml",
-      "FileKind": "mvc"
-    },
-    {
       "FilePath": "c:\\Users\\t_war\\Documents\\projects\\code\\sql-injection-attack-demo\\webapp\\Views\\Home\\Index.cshtml",
       "TargetPath": "Views\\Home\\Index.cshtml",
       "FileKind": "mvc"
