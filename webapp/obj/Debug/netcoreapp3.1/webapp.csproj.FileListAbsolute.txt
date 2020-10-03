@@ -33,3 +33,5 @@ C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debu
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\webapp.pdb
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\webapp.genruntimeconfig.cache
 C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\obj\Debug\netcoreapp3.1\webapp.csproj.CopyComplete
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\bin\Debug\netcoreapp3.1\datalayer.dll
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\webapp\bin\Debug\netcoreapp3.1\datalayer.pdb
