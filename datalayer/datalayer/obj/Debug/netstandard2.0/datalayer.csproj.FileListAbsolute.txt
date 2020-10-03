@@ -1,0 +1,9 @@
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\bin\Debug\netstandard2.0\datalayer.deps.json
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\bin\Debug\netstandard2.0\datalayer.dll
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\bin\Debug\netstandard2.0\datalayer.pdb
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\obj\Debug\netstandard2.0\datalayer.csprojAssemblyReference.cache
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\obj\Debug\netstandard2.0\datalayer.AssemblyInfoInputs.cache
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\obj\Debug\netstandard2.0\datalayer.AssemblyInfo.cs
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\obj\Debug\netstandard2.0\datalayer.csproj.CoreCompileInputs.cache
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\obj\Debug\netstandard2.0\datalayer.dll
+C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\obj\Debug\netstandard2.0\datalayer.pdb
