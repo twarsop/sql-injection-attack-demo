@@ -5,6 +5,6 @@ namespace datalayer.interfaces
 {
     public interface ICustomerRepository
     {
-        IEnumerable<Customer> GetAll();
+        List<Customer> GetAll();
     }    
 }
