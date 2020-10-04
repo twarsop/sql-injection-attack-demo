@@ -31,7 +31,7 @@ namespace webapp.Controllers
                 viewModel.Customers.Add(new Customer
                 {
                     Id = c.Id,
-                    Title = c.Title,
+                    Title = c.Title.Name,
                     FirstName = c.FirstName,
                     LastName = c.LastName,
                     AddressLine1 = c.AddressLine1,
