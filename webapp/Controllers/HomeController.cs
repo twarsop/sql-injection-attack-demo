@@ -41,5 +41,10 @@ namespace webapp.Controllers
 
             return View(viewModel);
         }
+
+        public IActionResult AddCustomer()
+        {
+            return View();
+        }
     }
 }
