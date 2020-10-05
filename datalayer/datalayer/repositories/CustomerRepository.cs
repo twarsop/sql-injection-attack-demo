@@ -48,5 +48,30 @@ namespace datalayer.repositories
 
             return customers;
         }
+
+        public void Add(Customer c)
+        {
+            int currentMaxId = 0;
+            using (StreamReader sr = new StreamReader(@"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\customers.csv"))
+            {
+                // read the header
+                sr.ReadLine();
+
+                while(sr.Peek() != -1)
+                {
+                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
+                    int id = System.Convert.ToInt32(splitLine[0]);
+                    if (id > currentMaxId)
+                    {
+                        currentMaxId = id;
+                    }
+                }
+            }
+
+            using (StreamWriter sw = new StreamWriter(@"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\customers.csv", true))
+            {
+                sw.WriteLine(++currentMaxId + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
+            }
+        }
     }
 }
