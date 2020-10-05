@@ -49,6 +49,18 @@ namespace webapp.Controllers
 
         public IActionResult SaveCustomer(Customer c)
         {
+            var customer = new datalayer.models.Customer
+            {
+                Title = new datalayer.models.Title { Id = System.Convert.ToInt32(c.Title), Name = c.Title },
+                FirstName = c.FirstName,
+                LastName = c.LastName,
+                AddressLine1 = c.AddressLine1,
+                AddressPostcode = c.AddressPostcode
+            };
+
+            var customersRepository = new datalayer.repositories.CustomerRepository();
+            customersRepository.Add(customer);
+
             return RedirectToAction("Index");
         }
     }
