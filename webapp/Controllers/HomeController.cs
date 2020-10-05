@@ -44,7 +44,12 @@ namespace webapp.Controllers
 
         public IActionResult AddCustomer()
         {
-            return View();
+            return View(new Customer());
+        }
+
+        public IActionResult SaveCustomer(Customer c)
+        {
+            return RedirectToAction("Index");
         }
     }
 }
