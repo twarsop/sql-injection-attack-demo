@@ -2,26 +2,26 @@
     ViewData["Title"] = "Home Page";
 }
 
-@model webapp.Models.Customer
+@model webapp.Models.AddCustomerViewModel
 
 <h1 class="display-4">Add Customer</h1>
 
 @using (Html.BeginForm("SaveCustomer", "Home", FormMethod.Post))
 {
     <div>Title: </div>
-    @Html.TextBoxFor(m => m.Title)
+    @Html.DropDownListFor(m => m.CustomerTitleId, new SelectList(Model.Titles, "Id", "Name"))
 
     <div>First Name: </div>
-    @Html.TextBoxFor(m => m.FirstName)
+    @Html.TextBoxFor(m => m.Customer.FirstName)
 
     <div>Last Name: </div>
-    @Html.TextBoxFor(m => m.LastName)
+    @Html.TextBoxFor(m => m.Customer.LastName)
 
     <div>Address Line 1: </div>
-    @Html.TextBoxFor(m => m.AddressLine1)
+    @Html.TextBoxFor(m => m.Customer.AddressLine1)
 
     <div>Address Postcode: </div>
-    @Html.TextBoxFor(m => m.AddressPostcode)
+    @Html.TextBoxFor(m => m.Customer.AddressPostcode)
 
     <div style="clear:both"></div>
 
