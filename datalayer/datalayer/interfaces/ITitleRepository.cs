@@ -3,9 +3,8 @@ using datalayer.models;
 
 namespace datalayer.interfaces
 {
-    public interface ICustomerRepository
+    public interface ITitleRepository
     {
-        List<Customer> GetAll();
-        void Add(Customer c);
+        List<Title> GetAll();
     }    
 }
