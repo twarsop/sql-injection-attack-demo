@@ -72,5 +72,13 @@ namespace webapp.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public IActionResult DeleteCustomer(int customerId)
+        {
+            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            customersRepository.Delete(customerId);
+
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -16,6 +16,7 @@
         <th>LastName</th>
         <th>AddressLine1</th>
         <th>AddressPostcode</th>
+        <th></th>
     </tr>
     @foreach (var customer in Model.Customers)
     {
@@ -26,6 +27,7 @@
             <td>@customer.LastName</td>
             <td>@customer.AddressLine1</td>
             <td>@customer.AddressPostcode</td>
+            <td><input type="button" value="Delete" onclick="location.href='@Url.Action("DeleteCustomer", "Home", new { customerId = customer.Id })'" /></td>
         </tr>
     }
 </table>    
