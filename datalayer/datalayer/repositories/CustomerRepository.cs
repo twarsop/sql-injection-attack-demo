@@ -8,6 +8,7 @@ namespace datalayer.repositories
     public class CustomerRepository : ICustomerRepository
     {
         private readonly ITitleRepository _titleRepository;
+        private readonly string _customerFileLocation = @"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\customers.csv";
 
         public CustomerRepository()
         {
@@ -26,7 +27,7 @@ namespace datalayer.repositories
 
             List<Customer> customers = new List<Customer>();
 
-            using (StreamReader sr = new StreamReader(@"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\customers.csv"))
+            using (StreamReader sr = new StreamReader(_customerFileLocation))
             {
                 // read the header
                 sr.ReadLine();
@@ -52,7 +53,7 @@ namespace datalayer.repositories
         public void Add(Customer c)
         {
             int currentMaxId = 0;
-            using (StreamReader sr = new StreamReader(@"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\customers.csv"))
+            using (StreamReader sr = new StreamReader(_customerFileLocation))
             {
                 // read the header
                 sr.ReadLine();
@@ -68,9 +69,27 @@ namespace datalayer.repositories
                 }
             }
 
-            using (StreamWriter sw = new StreamWriter(@"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\customers.csv", true))
+            using (StreamWriter sw = new StreamWriter(_customerFileLocation, true))
             {
                 sw.WriteLine(++currentMaxId + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
+            }
+        }
+
+        public void Delete(int id)
+        {
+            List<Customer> customers = this.GetAll();
+            
+            using (StreamWriter sw = new StreamWriter(_customerFileLocation))
+            {
+                sw.WriteLine("Id,TitleId,FirstName,LastName,AddressLine1,AddressPostcode");
+
+                foreach (var c in customers)
+                {
+                    if (c.Id != id)
+                    {
+                        sw.WriteLine(c.Id + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
+                    }
+                }
             }
         }
     }

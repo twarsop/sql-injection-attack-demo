@@ -7,5 +7,6 @@ namespace datalayer.interfaces
     {
         List<Customer> GetAll();
         void Add(Customer c);
+        void Delete(int id);
     }    
 }
