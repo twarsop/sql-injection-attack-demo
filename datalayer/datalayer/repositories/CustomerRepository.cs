@@ -50,6 +50,29 @@ namespace datalayer.repositories
             return customers;
         }
 
+        public List<Customer> Search(Customer c)
+        {
+            List<Customer> allCustomers = this.GetAll();
+
+            var searchResults = new List<Customer>();
+
+            foreach (Customer customer in allCustomers)
+            {
+                if ( 
+                    (c.Title.Id == 0 || c.Title.Id == customer.Title.Id)
+                    && (c.FirstName == "" || c.FirstName == customer.FirstName)
+                    && (c.LastName == "" || c.LastName == customer.LastName)
+                    && (c.AddressLine1 == "" || c.AddressLine1 == customer.AddressLine1)
+                    && (c.AddressPostcode == "" || c.AddressPostcode == customer.AddressPostcode)
+                    )
+                {
+                    searchResults.Add(customer);
+                }
+            }
+
+            return searchResults;
+        }
+
         public void Add(Customer c)
         {
             int currentMaxId = 0;
