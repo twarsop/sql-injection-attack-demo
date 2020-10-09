@@ -60,10 +60,10 @@ namespace datalayer.repositories
             {
                 if ( 
                     (c.Title.Id == 0 || c.Title.Id == customer.Title.Id)
-                    && (c.FirstName == "" || c.FirstName == customer.FirstName)
-                    && (c.LastName == "" || c.LastName == customer.LastName)
-                    && (c.AddressLine1 == "" || c.AddressLine1 == customer.AddressLine1)
-                    && (c.AddressPostcode == "" || c.AddressPostcode == customer.AddressPostcode)
+                    && (string.IsNullOrEmpty(c.FirstName) || c.FirstName == customer.FirstName)
+                    && (string.IsNullOrEmpty(c.LastName) || c.LastName == customer.LastName)
+                    && (string.IsNullOrEmpty(c.AddressLine1) || c.AddressLine1 == customer.AddressLine1)
+                    && (string.IsNullOrEmpty(c.AddressPostcode) || c.AddressPostcode == customer.AddressPostcode)
                     )
                 {
                     searchResults.Add(customer);
