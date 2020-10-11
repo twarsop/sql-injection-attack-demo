@@ -24,6 +24,11 @@ namespace webapp.Controllers
             datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
             var customers = customersRepository.GetAll();
 
+            return IndexHelper(customers);
+        }
+
+        public IActionResult IndexHelper(List<datalayer.models.Customer> customers)
+        {
             var viewModel = new IndexViewModel{ Customers = new List<Customer>() };
 
             foreach(var c in customers)
@@ -39,7 +44,19 @@ namespace webapp.Controllers
                 });
             }
 
-            return View(viewModel);
+            datalayer.interfaces.ITitleRepository titleRepository = new datalayer.repositories.TitleRepository();
+            List<datalayer.models.Title> allTitles = titleRepository.GetAll();
+
+            var titles = new List<Title>();
+            titles.Add(new Title{ Id = 0, Name = "Please Select..." });
+            foreach (var title in allTitles)
+            {
+                titles.Add(new Title{ Id = title.Id, Name = title.Name });
+            }
+
+            viewModel.SearchDetails = new AddCustomerViewModel{ Customer = new Customer(), Titles = titles };
+
+            return View("Index", viewModel);
         }
 
         public IActionResult AddCustomer()
@@ -79,6 +96,23 @@ namespace webapp.Controllers
             customersRepository.Delete(customerId);
 
             return RedirectToAction("Index");
+        }
+
+        public IActionResult SearchCustomers(IndexViewModel a)
+        {
+            var searchDetails = new datalayer.models.Customer
+            {
+                Title = new datalayer.models.Title { Id = System.Convert.ToInt32(a.SearchDetails.CustomerTitleId) },
+                FirstName = a.SearchDetails.Customer.FirstName,
+                LastName = a.SearchDetails.Customer.LastName,
+                AddressLine1 = a.SearchDetails.Customer.AddressLine1,
+                AddressPostcode = a.SearchDetails.Customer.AddressPostcode
+            };
+
+            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            var customers = customersRepository.Search(searchDetails);
+
+            return IndexHelper(customers);
         }
     }
 }

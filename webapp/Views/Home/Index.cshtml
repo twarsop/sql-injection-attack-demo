@@ -6,6 +6,32 @@
 
 <h1 class="display-4">Customers</h1>
 
+<h2 class="display-4">Search</h2>
+
+@using (Html.BeginForm("SearchCustomers", "Home", FormMethod.Post))
+{
+    <div>Title: </div>
+    @Html.DropDownListFor(m => m.SearchDetails.CustomerTitleId, new SelectList(Model.SearchDetails.Titles, "Id", "Name"))
+
+    <div>First Name: </div>
+    @Html.TextBoxFor(m => m.SearchDetails.Customer.FirstName, new { @name = "Customer.FirstName" })
+
+    <div>Last Name: </div>
+    @Html.TextBoxFor(m => m.SearchDetails.Customer.LastName)
+
+    <div>Address Line 1: </div>
+    @Html.TextBoxFor(m => m.SearchDetails.Customer.AddressLine1)
+
+    <div>Address Postcode: </div>
+    @Html.TextBoxFor(m => m.SearchDetails.Customer.AddressPostcode)
+
+    <div style="clear:both"></div>
+
+    <input type="submit" value="Search" />
+}
+
+<input type="button" value="Clear Search" onclick="location.href='@Url.Action("Index", "Home")'" />
+
 <input type="button" value="Add Customer" onclick="location.href='@Url.Action("AddCustomer", "Home")'" />
 
 <table>
