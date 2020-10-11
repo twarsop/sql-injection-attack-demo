@@ -43,6 +43,7 @@
         <th>AddressLine1</th>
         <th>AddressPostcode</th>
         <th></th>
+        <th></th>
     </tr>
     @foreach (var customer in Model.Customers)
     {
@@ -53,6 +54,7 @@
             <td>@customer.LastName</td>
             <td>@customer.AddressLine1</td>
             <td>@customer.AddressPostcode</td>
+            <td><input type="button" value="Edit" onclick="location.href='@Url.Action("EditCustomer", "Home", new { customerId = customer.Id })'" /></td>
             <td><input type="button" value="Delete" onclick="location.href='@Url.Action("DeleteCustomer", "Home", new { customerId = customer.Id })'" /></td>
         </tr>
     }

@@ -114,5 +114,19 @@ namespace webapp.Controllers
 
             return IndexHelper(customers);
         }
+
+        public IActionResult EditCustomer(int customerId)
+        {
+            datalayer.interfaces.ITitleRepository titleRepository = new datalayer.repositories.TitleRepository();
+            List<datalayer.models.Title> allTitles = titleRepository.GetAll();
+
+            var titles = new List<Title>();
+            foreach (var title in allTitles)
+            {
+                titles.Add(new Title{ Id = title.Id, Name = title.Name });
+            }
+
+            return RedirectToAction("Index");
+        }
     }
 }
