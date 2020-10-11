@@ -98,6 +98,28 @@ namespace datalayer.repositories
             }
         }
 
+        public void Update(Customer c)
+        {
+            List<Customer> customers = this.GetAll();
+            
+            using (StreamWriter sw = new StreamWriter(_customerFileLocation))
+            {
+                sw.WriteLine("Id,TitleId,FirstName,LastName,AddressLine1,AddressPostcode");
+
+                foreach (var customer in customers)
+                {
+                    if (customer.Id != c.Id)
+                    {
+                        sw.WriteLine(customer.Id + "," + customer.Title.Id + "," + customer.FirstName + "," + customer.LastName + "," + customer.AddressLine1 + "," + customer.AddressPostcode);
+                    }
+                    else
+                    {
+                        sw.WriteLine(c.Id + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
+                    }                    
+                }
+            }
+        }
+
         public void Delete(int id)
         {
             List<Customer> customers = this.GetAll();

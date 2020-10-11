@@ -8,6 +8,7 @@ namespace datalayer.interfaces
         List<Customer> GetAll();
         List<Customer> Search(Customer c);
         void Add(Customer c);
+        void Update(Customer c);
         void Delete(int id);
     }    
 }
