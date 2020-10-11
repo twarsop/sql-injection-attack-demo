@@ -5,6 +5,7 @@ namespace datalayer.interfaces
 {
     public interface ICustomerRepository
     {
+        Customer Get(int id);
         List<Customer> GetAll();
         List<Customer> Search(Customer c);
         void Add(Customer c);
