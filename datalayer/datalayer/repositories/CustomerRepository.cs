@@ -15,6 +15,46 @@ namespace datalayer.repositories
             _titleRepository = new TitleRepository();
         }
 
+        public Customer Get(int id)
+        {
+            // preload the list of titles and store in dictionary for later use
+            List<Title> titles = _titleRepository.GetAll();
+            var titleLookup = new Dictionary<int, Title>();
+            foreach (Title title in titles)
+            {
+                titleLookup.Add(title.Id, title);
+            }
+
+            var customer = new Customer();
+
+            using (StreamReader sr = new StreamReader(_customerFileLocation))
+            {
+                // read the header
+                sr.ReadLine();
+
+                while(sr.Peek() != -1)
+                {
+                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
+                    if (System.Convert.ToInt32(splitLine[0]) == id)
+                    {
+                        customer = new Customer
+                        {
+                            Id = System.Convert.ToInt32(splitLine[0]),
+                            Title = titleLookup[System.Convert.ToInt32(splitLine[1])],
+                            FirstName = splitLine[2],
+                            LastName = splitLine[3],
+                            AddressLine1 = splitLine[4],
+                            AddressPostcode = splitLine[5]
+                        };
+
+                        break;
+                    }                    
+                }
+            }
+
+            return customer;
+        }
+
         public List<Customer> GetAll()
         {
             // preload the list of titles and store in dictionary for later use
@@ -95,6 +135,28 @@ namespace datalayer.repositories
             using (StreamWriter sw = new StreamWriter(_customerFileLocation, true))
             {
                 sw.WriteLine(++currentMaxId + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
+            }
+        }
+
+        public void Update(Customer c)
+        {
+            List<Customer> customers = this.GetAll();
+            
+            using (StreamWriter sw = new StreamWriter(_customerFileLocation))
+            {
+                sw.WriteLine("Id,TitleId,FirstName,LastName,AddressLine1,AddressPostcode");
+
+                foreach (var customer in customers)
+                {
+                    if (customer.Id != c.Id)
+                    {
+                        sw.WriteLine(customer.Id + "," + customer.Title.Id + "," + customer.FirstName + "," + customer.LastName + "," + customer.AddressLine1 + "," + customer.AddressPostcode);
+                    }
+                    else
+                    {
+                        sw.WriteLine(c.Id + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
+                    }                    
+                }
             }
         }
 
