@@ -126,6 +126,38 @@ namespace webapp.Controllers
                 titles.Add(new Title{ Id = title.Id, Name = title.Name });
             }
 
+            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            var customer = customersRepository.Get(customerId);
+
+            return View(new EditCustomerViewModel { 
+                Customer = new Customer {
+                    Id = customer.Id,
+                    Title = customer.Title.Name,
+                    FirstName = customer.FirstName,
+                    LastName = customer.LastName,
+                    AddressLine1 = customer.AddressLine1,
+                    AddressPostcode = customer.AddressPostcode 
+                }, 
+                CustomerTitleId = customer.Title.Id,
+                Titles = titles 
+            });
+        }
+
+        public IActionResult SaveEditCustomer(EditCustomerViewModel a)
+        {
+            var customer = new datalayer.models.Customer
+            {
+                Id = a.Customer.Id,
+                Title = new datalayer.models.Title { Id = System.Convert.ToInt32(a.CustomerTitleId) },
+                FirstName = a.Customer.FirstName,
+                LastName = a.Customer.LastName,
+                AddressLine1 = a.Customer.AddressLine1,
+                AddressPostcode = a.Customer.AddressPostcode
+            };
+
+            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            customersRepository.Update(customer);
+
             return RedirectToAction("Index");
         }
     }

@@ -46,9 +46,9 @@ namespace datalayer.repositories
                             AddressLine1 = splitLine[4],
                             AddressPostcode = splitLine[5]
                         };
-                    }
 
-                    break;
+                        break;
+                    }                    
                 }
             }
 
