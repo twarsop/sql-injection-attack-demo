@@ -54,7 +54,7 @@ namespace webapp.Controllers
                 titles.Add(new Title{ Id = title.Id, Name = title.Name });
             }
 
-            viewModel.SearchDetails = new AddCustomerViewModel{ Customer = new Customer(), Titles = titles };
+            viewModel.SearchDetails = new CustomerViewModel{ Customer = new Customer(), Titles = titles };
 
             return View("Index", viewModel);
         }
@@ -70,10 +70,10 @@ namespace webapp.Controllers
                 titles.Add(new Title{ Id = title.Id, Name = title.Name });
             }
 
-            return View(new AddCustomerViewModel{ Customer = new Customer(), Titles = titles });
+            return View(new CustomerViewModel{ Customer = new Customer(), Titles = titles });
         }
 
-        public IActionResult SaveCustomer(AddCustomerViewModel a)
+        public IActionResult SaveCustomer(CustomerViewModel a)
         {
             var customer = new datalayer.models.Customer
             {
