@@ -129,7 +129,7 @@ namespace webapp.Controllers
             datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
             var customer = customersRepository.Get(customerId);
 
-            return View(new EditCustomerViewModel { 
+            return View(new CustomerViewModel { 
                 Customer = new Customer {
                     Id = customer.Id,
                     Title = customer.Title.Name,
@@ -143,7 +143,7 @@ namespace webapp.Controllers
             });
         }
 
-        public IActionResult SaveEditCustomer(EditCustomerViewModel a)
+        public IActionResult SaveEditCustomer(CustomerViewModel a)
         {
             var customer = new datalayer.models.Customer
             {
