@@ -58,6 +58,7 @@ namespace webapp.Controllers
         {
             var customer = new datalayer.models.Customer
             {
+                Id = a.Customer.Id,
                 Title = new datalayer.models.Title { Id = System.Convert.ToInt32(a.CustomerTitleId) },
                 FirstName = a.Customer.FirstName,
                 LastName = a.Customer.LastName,
@@ -66,7 +67,15 @@ namespace webapp.Controllers
             };
 
             datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
-            customersRepository.Add(customer);
+            
+            if (customer.Id == 0)
+            {
+                customersRepository.Add(customer);
+            }
+            else
+            {
+                customersRepository.Update(customer);
+            }
 
             return RedirectToAction("Index");
         }
@@ -113,24 +122,6 @@ namespace webapp.Controllers
                 CustomerTitleId = customer.Title.Id,
                 Titles = BuildTitleList() 
             });
-        }
-
-        public IActionResult SaveEditCustomer(CustomerViewModel a)
-        {
-            var customer = new datalayer.models.Customer
-            {
-                Id = a.Customer.Id,
-                Title = new datalayer.models.Title { Id = System.Convert.ToInt32(a.CustomerTitleId) },
-                FirstName = a.Customer.FirstName,
-                LastName = a.Customer.LastName,
-                AddressLine1 = a.Customer.AddressLine1,
-                AddressPostcode = a.Customer.AddressPostcode
-            };
-
-            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
-            customersRepository.Update(customer);
-
-            return RedirectToAction("Index");
         }
 
         private List<Title> BuildTitleList()
