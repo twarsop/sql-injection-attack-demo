@@ -1,0 +1,28 @@
+@model webapp.Models.CustomerViewModel
+
+@using (Html.BeginForm("SaveCustomer", "Home", FormMethod.Post))
+{
+    <div>Id: </div>
+    @Html.TextBoxFor(m => m.Customer.Id)
+
+    <div>Title: </div>
+    @Html.DropDownListFor(m => m.CustomerTitleId, new SelectList(Model.Titles, "Id", "Name"))
+
+    <div>First Name: </div>
+    @Html.TextBoxFor(m => m.Customer.FirstName)
+
+    <div>Last Name: </div>
+    @Html.TextBoxFor(m => m.Customer.LastName)
+
+    <div>Address Line 1: </div>
+    @Html.TextBoxFor(m => m.Customer.AddressLine1)
+
+    <div>Address Postcode: </div>
+    @Html.TextBoxFor(m => m.Customer.AddressPostcode)
+
+    <div style="clear:both"></div>
+
+    <input type="submit" value="Save Customer" />
+}
+
+<input type="button" value="Cancel" onclick="location.href='@Url.Action("Index", "Home")'" />

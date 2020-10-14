@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace webapp.Models
 {
-    public class EditCustomerViewModel
+    public class CustomerViewModel
     {
         public List<Title> Titles { get; set; }
         public Customer Customer { get; set; }

@@ -44,39 +44,21 @@ namespace webapp.Controllers
                 });
             }
 
-            datalayer.interfaces.ITitleRepository titleRepository = new datalayer.repositories.TitleRepository();
-            List<datalayer.models.Title> allTitles = titleRepository.GetAll();
-
-            var titles = new List<Title>();
-            titles.Add(new Title{ Id = 0, Name = "Please Select..." });
-            foreach (var title in allTitles)
-            {
-                titles.Add(new Title{ Id = title.Id, Name = title.Name });
-            }
-
-            viewModel.SearchDetails = new AddCustomerViewModel{ Customer = new Customer(), Titles = titles };
+            viewModel.SearchDetails = new CustomerViewModel{ Customer = new Customer(), Titles = BuildTitleList() };
 
             return View("Index", viewModel);
         }
 
         public IActionResult AddCustomer()
         {
-            datalayer.interfaces.ITitleRepository titleRepository = new datalayer.repositories.TitleRepository();
-            List<datalayer.models.Title> allTitles = titleRepository.GetAll();
-
-            var titles = new List<Title>();
-            foreach (var title in allTitles)
-            {
-                titles.Add(new Title{ Id = title.Id, Name = title.Name });
-            }
-
-            return View(new AddCustomerViewModel{ Customer = new Customer(), Titles = titles });
+            return View(new CustomerViewModel{ Customer = new Customer(), Titles = BuildTitleList() });
         }
 
-        public IActionResult SaveCustomer(AddCustomerViewModel a)
+        public IActionResult SaveCustomer(CustomerViewModel a)
         {
             var customer = new datalayer.models.Customer
             {
+                Id = a.Customer.Id,
                 Title = new datalayer.models.Title { Id = System.Convert.ToInt32(a.CustomerTitleId) },
                 FirstName = a.Customer.FirstName,
                 LastName = a.Customer.LastName,
@@ -85,7 +67,15 @@ namespace webapp.Controllers
             };
 
             datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
-            customersRepository.Add(customer);
+            
+            if (customer.Id == 0)
+            {
+                customersRepository.Add(customer);
+            }
+            else
+            {
+                customersRepository.Update(customer);
+            }
 
             return RedirectToAction("Index");
         }
@@ -117,19 +107,10 @@ namespace webapp.Controllers
 
         public IActionResult EditCustomer(int customerId)
         {
-            datalayer.interfaces.ITitleRepository titleRepository = new datalayer.repositories.TitleRepository();
-            List<datalayer.models.Title> allTitles = titleRepository.GetAll();
-
-            var titles = new List<Title>();
-            foreach (var title in allTitles)
-            {
-                titles.Add(new Title{ Id = title.Id, Name = title.Name });
-            }
-
             datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
             var customer = customersRepository.Get(customerId);
 
-            return View(new EditCustomerViewModel { 
+            return View(new CustomerViewModel { 
                 Customer = new Customer {
                     Id = customer.Id,
                     Title = customer.Title.Name,
@@ -139,26 +120,22 @@ namespace webapp.Controllers
                     AddressPostcode = customer.AddressPostcode 
                 }, 
                 CustomerTitleId = customer.Title.Id,
-                Titles = titles 
+                Titles = BuildTitleList() 
             });
         }
 
-        public IActionResult SaveEditCustomer(EditCustomerViewModel a)
+        private List<Title> BuildTitleList()
         {
-            var customer = new datalayer.models.Customer
+            datalayer.interfaces.ITitleRepository titleRepository = new datalayer.repositories.TitleRepository();
+            List<datalayer.models.Title> allTitles = titleRepository.GetAll();
+
+            var titles = new List<Title>();
+            foreach (var title in allTitles)
             {
-                Id = a.Customer.Id,
-                Title = new datalayer.models.Title { Id = System.Convert.ToInt32(a.CustomerTitleId) },
-                FirstName = a.Customer.FirstName,
-                LastName = a.Customer.LastName,
-                AddressLine1 = a.Customer.AddressLine1,
-                AddressPostcode = a.Customer.AddressPostcode
-            };
+                titles.Add(new Title{ Id = title.Id, Name = title.Name });
+            }
 
-            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
-            customersRepository.Update(customer);
-
-            return RedirectToAction("Index");
+            return titles;
         }
     }
 }
