@@ -10,11 +10,11 @@ using webapp.Models;
 
 namespace webapp.Controllers
 {
-    public class HomeController : Controller
+    public class CustomerController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<CustomerController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public CustomerController(ILogger<CustomerController> logger)
         {
             _logger = logger;
         }
