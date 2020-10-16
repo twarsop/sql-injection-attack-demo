@@ -1,1 +1,53 @@
-﻿
+﻿body 
+{
+    background-color: #202124;
+    color: #93aeff;
+}
+
+.center
+{
+    margin:auto;
+}
+
+.field-container
+{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.field-container .field 
+{
+    margin-bottom: 10px;
+}
+
+.field-container .field .label
+{
+    float: left;
+    width: 150px;
+}
+
+.field-container .field .value
+{
+    float: left;
+}
+
+.field-container .field input
+{
+    width: 350px;
+}
+
+.button
+{
+    background-color: #93aeff;
+    color: #202124;
+    border: 0;
+    padding: 10px 20px;
+    font-weight: 700;
+    width: 173px;
+}
+
+.button:hover
+{
+    background-color: #4c66b6;
+    color: #ffffff !important;
+}
