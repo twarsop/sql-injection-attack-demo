@@ -4,58 +4,82 @@
 
 @model webapp.Models.IndexViewModel
 
-<h1 class="display-4">Customers</h1>
+<div class="center page-title">
+    <h1>Customers</h1>
+</div>
 
-<h2 class="display-4">Search</h2>
+<div class="center page-title">
+    <h1>Search</h1>
+</div>
 
 @using (Html.BeginForm("SearchCustomers", "Home", FormMethod.Post))
 {
-    <div>Title: </div>
-    @Html.DropDownListFor(m => m.SearchDetails.CustomerTitleId, new SelectList(Model.SearchDetails.Titles, "Id", "Name"))
+    <div class="field-container center" style="width:500px;">
+        <div class="field">
+            <div class="label">Title: </div>
+            @Html.DropDownListFor(m => m.SearchDetails.CustomerTitleId, new SelectList(Model.SearchDetails.Titles, "Id", "Name"), new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
 
-    <div>First Name: </div>
-    @Html.TextBoxFor(m => m.SearchDetails.Customer.FirstName, new { @name = "Customer.FirstName" })
+        <div class="field">
+            <div class="label">First Name: </div>
+            @Html.TextBoxFor(m => m.SearchDetails.Customer.FirstName, new { @name = "Customer.FirstName", @class="value"})
+            <div style="clear:both"></div>
+        </div>
 
-    <div>Last Name: </div>
-    @Html.TextBoxFor(m => m.SearchDetails.Customer.LastName)
+        <div class="field">
+            <div class="label">Last Name: </div>
+            @Html.TextBoxFor(m => m.SearchDetails.Customer.LastName, new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
 
-    <div>Address Line 1: </div>
-    @Html.TextBoxFor(m => m.SearchDetails.Customer.AddressLine1)
+        <div class="field">
+            <div class="label">Address Line 1: </div>
+            @Html.TextBoxFor(m => m.SearchDetails.Customer.AddressLine1, new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
 
-    <div>Address Postcode: </div>
-    @Html.TextBoxFor(m => m.SearchDetails.Customer.AddressPostcode)
+        <div class="field">
+            <div class="label">Address Postcode: </div>
+            @Html.TextBoxFor(m => m.SearchDetails.Customer.AddressPostcode, new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
 
-    <div style="clear:both"></div>
+        <div style="clear:both"></div>
 
-    <input type="submit" value="Search" />
+        <div class="center" style="width:351px;">
+            <input type="submit" class="button" value="Search" />
+            <input type="button" class="button" value="Clear Search" onclick="location.href='@Url.Action("Index", "Home")'" />
+        </div>
+    </div>
 }
 
-<input type="button" value="Clear Search" onclick="location.href='@Url.Action("Index", "Home")'" />
+<div class="center" style="width: 1005px;">
+    <input type="button" class="button" style="margin-bottom:20px;" value="Add Customer" onclick="location.href='@Url.Action("AddCustomer", "Home")'" />
 
-<input type="button" value="Add Customer" onclick="location.href='@Url.Action("AddCustomer", "Home")'" />
-
-<table>
-    <tr>
-        <th>Id</th>
-        <th>Title</th>
-        <th>FirstName</th>
-        <th>LastName</th>
-        <th>AddressLine1</th>
-        <th>AddressPostcode</th>
-        <th></th>
-        <th></th>
-    </tr>
-    @foreach (var customer in Model.Customers)
-    {
+    <table>
         <tr>
-            <td>@customer.Id</td>
-            <td>@customer.Title</td>
-            <td>@customer.FirstName</td>
-            <td>@customer.LastName</td>
-            <td>@customer.AddressLine1</td>
-            <td>@customer.AddressPostcode</td>
-            <td><input type="button" value="Edit" onclick="location.href='@Url.Action("EditCustomer", "Home", new { customerId = customer.Id })'" /></td>
-            <td><input type="button" value="Delete" onclick="location.href='@Url.Action("DeleteCustomer", "Home", new { customerId = customer.Id })'" /></td>
+            <th><div>Id</div></th>
+            <th><div>Title</div></th>
+            <th><div>FirstName</div></th>
+            <th><div>LastName</div></th>
+            <th><div>AddressLine1</div></th>
+            <th><div>AddressPostcode</div></th>
+            <th><div></div></th>
+            <th><div></div></th>
         </tr>
-    }
-</table>    
+        @foreach (var customer in Model.Customers)
+        {
+            <tr>
+                <td>@customer.Id</td>
+                <td>@customer.Title</td>
+                <td>@customer.FirstName</td>
+                <td>@customer.LastName</td>
+                <td>@customer.AddressLine1</td>
+                <td>@customer.AddressPostcode</td>
+                <td><input type="button" class="small-button" value="Edit" onclick="location.href='@Url.Action("EditCustomer", "Home", new { customerId = customer.Id })'" /></td>
+                <td><input type="button" class="small-button" value="Delete" onclick="location.href='@Url.Action("DeleteCustomer", "Home", new { customerId = customer.Id })'" /></td>
+            </tr>
+        }
+    </table>
+</div>

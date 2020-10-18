@@ -9,6 +9,12 @@
     margin:auto;
 }
 
+.page-title
+{
+    width:265px; 
+    text-align:center;
+}
+
 .field-container
 {
     padding-top: 20px;
@@ -50,4 +56,36 @@
 {
     background-color: #4c66b6;
     color: #ffffff !important;
+}
+
+.small-button
+{
+    background-color: #93aeff;
+    color: #202124;
+    border: 0;
+    padding: 5px 10px;
+    font-weight: 700;
+    width: 100px;
+}
+
+.small-button:hover
+{
+    background-color: #4c66b6;
+    color: #ffffff !important;
+}
+
+table th
+{
+    font-size: 18px;
+    background-color: #0e0f13;
+}
+
+table th, td
+{
+    padding: 3px 20px;
+}
+
+table tr:nth-child(even) 
+{
+    background-color: #35363a;
 }
