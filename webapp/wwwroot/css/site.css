@@ -1,1 +1,120 @@
-﻿
+﻿body 
+{
+    background-color: #202124;
+    color: #93aeff;
+}
+
+.center
+{
+    margin:auto;
+}
+
+.page-title
+{
+    width:265px; 
+    text-align:center;
+}
+
+.field-container
+{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.field-container .field 
+{
+    margin-bottom: 10px;
+}
+
+.field-container .field .label
+{
+    float: left;
+    width: 150px;
+}
+
+.field-container .field .value
+{
+    float: left;
+}
+
+.field-container .field input
+{
+    width: 350px;
+}
+
+.field-container .two-columns
+{
+    width: 50%; 
+    float: left; 
+    padding: 10px;
+}
+
+.field-container .two-columns .field
+{
+    margin-bottom: 10px;
+}
+
+.field-container .two-columns .field .label
+{
+    float: left; 
+    width: 30%;
+}
+
+.field-container .two-columns .field .value-container
+{
+    float: left; 
+    width: 70%;
+}
+
+.field-container .two-columns .field .value-container input
+{
+    width: 100%;
+}
+
+.button
+{
+    background-color: #93aeff;
+    color: #202124;
+    border: 0;
+    padding: 10px 20px;
+    font-weight: 700;
+    width: 173px;
+}
+
+.button:hover
+{
+    background-color: #4c66b6;
+    color: #ffffff !important;
+}
+
+.small-button
+{
+    background-color: #93aeff;
+    color: #202124;
+    border: 0;
+    padding: 5px 10px;
+    font-weight: 700;
+    width: 100px;
+}
+
+.small-button:hover
+{
+    background-color: #4c66b6;
+    color: #ffffff !important;
+}
+
+table th
+{
+    font-size: 18px;
+    background-color: #0e0f13;
+}
+
+table th, td
+{
+    padding: 3px 20px;
+}
+
+table tr:nth-child(even) 
+{
+    background-color: #35363a;
+}
