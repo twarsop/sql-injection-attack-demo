@@ -42,6 +42,35 @@
     width: 350px;
 }
 
+.field-container .two-columns
+{
+    width: 50%; 
+    float: left; 
+    padding: 10px;
+}
+
+.field-container .two-columns .field
+{
+    margin-bottom: 10px;
+}
+
+.field-container .two-columns .field .label
+{
+    float: left; 
+    width: 30%;
+}
+
+.field-container .two-columns .field .value-container
+{
+    float: left; 
+    width: 70%;
+}
+
+.field-container .two-columns .field .value-container input
+{
+    width: 100%;
+}
+
 .button
 {
     background-color: #93aeff;
