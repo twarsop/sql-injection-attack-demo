@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using datalayer.interfaces;
 using datalayer.models;
+using Npgsql;
 
 namespace datalayer.repositories
 {
@@ -10,18 +11,22 @@ namespace datalayer.repositories
         public List<Title> GetAll()
         {
             List<Title> titles = new List<Title>();
-            using (StreamReader sr = new StreamReader(@"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\titles.csv"))
-            {
-                // read the header
-                sr.ReadLine();
 
-                while (sr.Peek() != -1)
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
+
+            using (var command = new NpgsqlCommand("SELECT Id, Name FROM public.Titles", conn))
+            {
+                var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
-                    int id = System.Convert.ToInt32(splitLine[0]);
-                    titles.Add(new Title { Id = id, Name = splitLine[1] });
+                    var id = System.Int32.Parse(reader["Id"].ToString());
+                    var name = reader["Name"].ToString();
+                    titles.Add(new Title { Id = id, Name = name });
                 }
             }
+
+            conn.Close();
 
             return titles;
         }
