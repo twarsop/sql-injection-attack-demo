@@ -18,13 +18,7 @@ namespace datalayer.repositories
 
         public Customer Get(int id)
         {
-            // preload the list of titles and store in dictionary for later use
-            List<Title> titles = _titleRepository.GetAll();
-            var titleLookup = new Dictionary<int, Title>();
-            foreach (Title title in titles)
-            {
-                titleLookup.Add(title.Id, title);
-            }
+            Dictionary<int, Title> titleLookup = this.BuildTitleLookup();
 
             var customer = new Customer();
 
@@ -55,13 +49,7 @@ namespace datalayer.repositories
 
         public List<Customer> GetAll()
         {
-            // preload the list of titles and store in dictionary for later use
-            List<Title> titles = _titleRepository.GetAll();
-            var titleLookup = new Dictionary<int, Title>();
-            foreach (Title title in titles)
-            {
-                titleLookup.Add(title.Id, title);
-            }
+            Dictionary<int, Title> titleLookup = this.BuildTitleLookup();
 
             List<Customer> customers = new List<Customer>();
 
@@ -176,6 +164,17 @@ namespace datalayer.repositories
                     }
                 }
             }
+        }
+
+        private Dictionary<int, Title> BuildTitleLookup()
+        {
+            List<Title> titles = _titleRepository.GetAll();
+            var titleLookup = new Dictionary<int, Title>();
+            foreach (Title title in titles)
+            {
+                titleLookup.Add(title.Id, title);
+            }
+            return titleLookup;
         }
     }
 }
