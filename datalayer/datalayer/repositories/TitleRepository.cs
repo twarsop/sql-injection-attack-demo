@@ -15,13 +15,13 @@ namespace datalayer.repositories
             var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT Id, Name FROM public.Titles", conn))
+            using (var command = new NpgsqlCommand("SELECT id, name FROM public.titles", conn))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    var id = System.Int32.Parse(reader["Id"].ToString());
-                    var name = reader["Name"].ToString();
+                    var id = System.Int32.Parse(reader["id"].ToString());
+                    var name = reader["name"].ToString();
                     titles.Add(new Title { Id = id, Name = name });
                 }
             }

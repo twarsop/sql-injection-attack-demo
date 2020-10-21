@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using datalayer.interfaces;
-    using datalayer.models;
+using datalayer.models;
+using Npgsql;
 
 namespace datalayer.repositories
 {
@@ -67,25 +68,27 @@ namespace datalayer.repositories
 
             List<Customer> customers = new List<Customer>();
 
-            using (StreamReader sr = new StreamReader(_customerFileLocation))
-            {
-                // read the header
-                sr.ReadLine();
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
 
-                while(sr.Peek() != -1)
+            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers", conn))
+            {
+                var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
                     customers.Add(new Customer
                     {
-                        Id = System.Convert.ToInt32(splitLine[0]),
-                        Title = titleLookup[System.Convert.ToInt32(splitLine[1])],
-                        FirstName = splitLine[2],
-                        LastName = splitLine[3],
-                        AddressLine1 = splitLine[4],
-                        AddressPostcode = splitLine[5]
+                        Id = System.Int32.Parse(reader["id"].ToString()),
+                        Title = titleLookup[System.Int32.Parse(reader["titleid"].ToString())],
+                        FirstName = reader["firstname"].ToString(),
+                        LastName = reader["lastname"].ToString(),
+                        AddressLine1 = reader["addressline1"].ToString(),
+                        AddressPostcode = reader["addresspostcode"].ToString()
                     });
                 }
             }
+
+            conn.Close();
 
             return customers;
         }

@@ -2,11 +2,11 @@ CREATE DATABASE sqlinjectionattackdemo;
 
 CREATE TABLE sqlinjectionattackdemo.public.titles
 (
-    Id SERIAL NOT NULL PRIMARY KEY,
-    Name VARCHAR(4) NOT NULL
+    id SERIAL NOT NULL PRIMARY KEY,
+    name VARCHAR(4) NOT NULL
 );
 
-INSERT INTO sqlinjectionattackdemo.public.titles (Id, Name)
+INSERT INTO sqlinjectionattackdemo.public.titles (id, name)
 VALUES (1, 'Mr'),
 (2, 'Mrs'),
 (3, 'Miss'),
@@ -16,13 +16,13 @@ VALUES (1, 'Mr'),
 
 CREATE TABLE sqlinjectionattackdemo.public.customers
 (
-    Id SERIAL NOT NULL PRIMARY KEY,
-    TitleId INT NOT NULL REFERENCES sqlinjectionattackdemo.public.titles(Id),
-    FirstName VARCHAR(255) NOT NULL,
-    LastName VARCHAR(255) NOT NULL,
-    AddressLine1 VARCHAR(255) NOT NULL,
-    AddressPostcode VARCHAR(255) NOT NULL
+    id SERIAL NOT NULL PRIMARY KEY,
+    titleid INT NOT NULL REFERENCES sqlinjectionattackdemo.public.titles(id),
+    firstname VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    addressline1 VARCHAR(255) NOT NULL,
+    addresspostcode VARCHAR(255) NOT NULL
 );
 
-INSERT INTO sqlinjectionattackdemo.public.customers (TitleId, FirstName, LastName, AddressLine1, AddressPostcode)
+INSERT INTO sqlinjectionattackdemo.public.customers (titleid, firstname, lastname, addressline1, addresspostcode)
 VALUES (1, 'FirstName', 'LastName', 'AddressLine1', 'AddressPostcode');
