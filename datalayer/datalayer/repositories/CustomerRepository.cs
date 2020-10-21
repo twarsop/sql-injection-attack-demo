@@ -111,8 +111,7 @@ namespace datalayer.repositories
             var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
             conn.Open();
 
-            var updateSql = "";
-            updateSql += "UPDATE public.customers SET ";
+            var updateSql = "UPDATE public.customers SET ";
             updateSql += "titleid = " + c.Title.Id.ToString() + ", ";
             updateSql += "firstname = '" + c.FirstName + "', ";
             updateSql += "lastname = '" + c.LastName + "', ";
