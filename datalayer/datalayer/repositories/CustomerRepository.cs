@@ -108,20 +108,8 @@ namespace datalayer.repositories
 
         public void Delete(int id)
         {
-            List<Customer> customers = this.GetAll();
-            
-            using (StreamWriter sw = new StreamWriter(_customerFileLocation))
-            {
-                sw.WriteLine("Id,TitleId,FirstName,LastName,AddressLine1,AddressPostcode");
-
-                foreach (var c in customers)
-                {
-                    if (c.Id != id)
-                    {
-                        sw.WriteLine(c.Id + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
-                    }
-                }
-            }
+            var deleteSql = "DELETE FROM public.customers WHERE id = " + id.ToString();
+            this.ExecuteNonQuery(deleteSql);
         }
 
         private Customer ParseCustomerFromReader(NpgsqlDataReader reader)
