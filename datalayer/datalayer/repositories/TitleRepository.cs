@@ -20,9 +20,10 @@ namespace datalayer.repositories
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    var id = System.Int32.Parse(reader["id"].ToString());
-                    var name = reader["name"].ToString();
-                    titles.Add(new Title { Id = id, Name = name });
+                    titles.Add(new Title { 
+                        Id = System.Int32.Parse(reader["id"].ToString()), 
+                        Name = reader["name"].ToString() 
+                    });
                 }
             }
 
