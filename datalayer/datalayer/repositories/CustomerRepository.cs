@@ -9,7 +9,6 @@ namespace datalayer.repositories
     public class CustomerRepository : ICustomerRepository
     {
         private readonly ITitleRepository _titleRepository;
-        private readonly string _customerFileLocation = @"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\customers.csv";
 
         public CustomerRepository()
         {
