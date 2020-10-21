@@ -28,30 +28,27 @@ namespace datalayer.repositories
 
             var customer = new Customer();
 
-            using (StreamReader sr = new StreamReader(_customerFileLocation))
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
+
+            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers WHERE id = " + id.ToString(), conn))
             {
-                // read the header
-                sr.ReadLine();
-
-                while(sr.Peek() != -1)
+                var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
-                    if (System.Convert.ToInt32(splitLine[0]) == id)
+                    customer = new Customer
                     {
-                        customer = new Customer
-                        {
-                            Id = System.Convert.ToInt32(splitLine[0]),
-                            Title = titleLookup[System.Convert.ToInt32(splitLine[1])],
-                            FirstName = splitLine[2],
-                            LastName = splitLine[3],
-                            AddressLine1 = splitLine[4],
-                            AddressPostcode = splitLine[5]
-                        };
-
-                        break;
-                    }                    
+                        Id = System.Int32.Parse(reader["id"].ToString()),
+                        Title = titleLookup[System.Int32.Parse(reader["titleid"].ToString())],
+                        FirstName = reader["firstname"].ToString(),
+                        LastName = reader["lastname"].ToString(),
+                        AddressLine1 = reader["addressline1"].ToString(),
+                        AddressPostcode = reader["addresspostcode"].ToString()
+                    };
                 }
             }
+
+            conn.Close();
 
             return customer;
         }
