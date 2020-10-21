@@ -83,9 +83,6 @@ namespace datalayer.repositories
 
         public void Add(Customer c)
         {
-            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
-            conn.Open();
-
             var insertSql = "INSERT INTO public.customers (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";
             insertSql += "(" + c.Title.Id.ToString() + ", ";
             insertSql += "'" + c.FirstName + "', ";
@@ -93,19 +90,11 @@ namespace datalayer.repositories
             insertSql += "'" + c.AddressLine1 + "', ";
             insertSql += "'" + c.AddressPostcode + "');";
 
-            using (var cmd = new NpgsqlCommand(insertSql, conn))
-            {
-                cmd.ExecuteNonQuery();
-            }
-
-            conn.Close();
+            this.ExecuteNonQuery(insertSql);
         }
 
         public void Update(Customer c)
         {
-            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
-            conn.Open();
-
             var updateSql = "UPDATE public.customers SET ";
             updateSql += "titleid = " + c.Title.Id.ToString() + ", ";
             updateSql += "firstname = '" + c.FirstName + "', ";
@@ -114,12 +103,7 @@ namespace datalayer.repositories
             updateSql += "addresspostcode = '" + c.AddressPostcode + "' ";
             updateSql += "WHERE id = " + c.Id.ToString();
 
-            using (var cmd = new NpgsqlCommand(updateSql, conn))
-            {
-                cmd.ExecuteNonQuery();
-            }
-
-            conn.Close();
+            this.ExecuteNonQuery(updateSql);
         }
 
         public void Delete(int id)
@@ -158,6 +142,19 @@ namespace datalayer.repositories
                 AddressLine1 = reader["addressline1"].ToString(),
                 AddressPostcode = reader["addresspostcode"].ToString()
             };
+        }
+
+        private void ExecuteNonQuery(string sql)
+        {
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
+
+            using (var cmd = new NpgsqlCommand(sql, conn))
+            {
+                cmd.ExecuteNonQuery();
+            }
+
+            conn.Close();
         }
     }
 }
