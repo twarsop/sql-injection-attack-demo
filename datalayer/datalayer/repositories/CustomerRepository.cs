@@ -18,8 +18,6 @@ namespace datalayer.repositories
 
         public Customer Get(int id)
         {
-            Dictionary<int, Title> titleLookup = this.BuildTitleLookup();
-
             var customer = new Customer();
 
             var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
@@ -30,15 +28,7 @@ namespace datalayer.repositories
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    customer = new Customer
-                    {
-                        Id = System.Int32.Parse(reader["id"].ToString()),
-                        Title = titleLookup[System.Int32.Parse(reader["titleid"].ToString())],
-                        FirstName = reader["firstname"].ToString(),
-                        LastName = reader["lastname"].ToString(),
-                        AddressLine1 = reader["addressline1"].ToString(),
-                        AddressPostcode = reader["addresspostcode"].ToString()
-                    };
+                    customer = this.ParseCustomerFromReader(reader);
                 }
             }
 
@@ -49,8 +39,6 @@ namespace datalayer.repositories
 
         public List<Customer> GetAll()
         {
-            Dictionary<int, Title> titleLookup = this.BuildTitleLookup();
-
             List<Customer> customers = new List<Customer>();
 
             var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
@@ -61,15 +49,7 @@ namespace datalayer.repositories
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    customers.Add(new Customer
-                    {
-                        Id = System.Int32.Parse(reader["id"].ToString()),
-                        Title = titleLookup[System.Int32.Parse(reader["titleid"].ToString())],
-                        FirstName = reader["firstname"].ToString(),
-                        LastName = reader["lastname"].ToString(),
-                        AddressLine1 = reader["addressline1"].ToString(),
-                        AddressPostcode = reader["addresspostcode"].ToString()
-                    });
+                    customers.Add(this.ParseCustomerFromReader(reader));
                 }
             }
 
@@ -166,7 +146,7 @@ namespace datalayer.repositories
             }
         }
 
-        private Dictionary<int, Title> BuildTitleLookup()
+        private Customer ParseCustomerFromReader(NpgsqlDataReader reader)
         {
             List<Title> titles = _titleRepository.GetAll();
             var titleLookup = new Dictionary<int, Title>();
@@ -174,7 +154,16 @@ namespace datalayer.repositories
             {
                 titleLookup.Add(title.Id, title);
             }
-            return titleLookup;
+
+            return new Customer
+            {
+                Id = System.Int32.Parse(reader["id"].ToString()),
+                Title = titleLookup[System.Int32.Parse(reader["titleid"].ToString())],
+                FirstName = reader["firstname"].ToString(),
+                LastName = reader["lastname"].ToString(),
+                AddressLine1 = reader["addressline1"].ToString(),
+                AddressPostcode = reader["addresspostcode"].ToString()
+            };
         }
     }
 }
