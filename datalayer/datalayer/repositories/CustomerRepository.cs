@@ -83,27 +83,22 @@ namespace datalayer.repositories
 
         public void Add(Customer c)
         {
-            int currentMaxId = 0;
-            using (StreamReader sr = new StreamReader(_customerFileLocation))
-            {
-                // read the header
-                sr.ReadLine();
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
 
-                while(sr.Peek() != -1)
-                {
-                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
-                    int id = System.Convert.ToInt32(splitLine[0]);
-                    if (id > currentMaxId)
-                    {
-                        currentMaxId = id;
-                    }
-                }
+            var insertSql = "INSERT INTO public.customers (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";
+            insertSql += "(" + c.Title.Id.ToString() + ", ";
+            insertSql += "'" + c.FirstName + "', ";
+            insertSql += "'" + c.LastName + "', ";
+            insertSql += "'" + c.AddressLine1 + "', ";
+            insertSql += "'" + c.AddressPostcode + "');";
+
+            using (var cmd = new NpgsqlCommand(insertSql, conn))
+            {
+                cmd.ExecuteNonQuery();
             }
 
-            using (StreamWriter sw = new StreamWriter(_customerFileLocation, true))
-            {
-                sw.WriteLine(++currentMaxId + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
-            }
+            conn.Close();
         }
 
         public void Update(Customer c)
