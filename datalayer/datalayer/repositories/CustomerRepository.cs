@@ -108,24 +108,24 @@ namespace datalayer.repositories
 
         public void Update(Customer c)
         {
-            List<Customer> customers = this.GetAll();
-            
-            using (StreamWriter sw = new StreamWriter(_customerFileLocation))
-            {
-                sw.WriteLine("Id,TitleId,FirstName,LastName,AddressLine1,AddressPostcode");
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
 
-                foreach (var customer in customers)
-                {
-                    if (customer.Id != c.Id)
-                    {
-                        sw.WriteLine(customer.Id + "," + customer.Title.Id + "," + customer.FirstName + "," + customer.LastName + "," + customer.AddressLine1 + "," + customer.AddressPostcode);
-                    }
-                    else
-                    {
-                        sw.WriteLine(c.Id + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
-                    }                    
-                }
+            var updateSql = "";
+            updateSql += "UPDATE public.customers SET ";
+            updateSql += "titleid = " + c.Title.Id.ToString() + ", ";
+            updateSql += "firstname = '" + c.FirstName + "', ";
+            updateSql += "lastname = '" + c.LastName + "', ";
+            updateSql += "addressline1 = '" + c.AddressLine1 + "', ";
+            updateSql += "addresspostcode = '" + c.AddressPostcode + "' ";
+            updateSql += "WHERE id = " + c.Id.ToString();
+
+            using (var cmd = new NpgsqlCommand(updateSql, conn))
+            {
+                cmd.ExecuteNonQuery();
             }
+
+            conn.Close();
         }
 
         public void Delete(int id)
