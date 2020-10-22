@@ -8,6 +8,18 @@ namespace datalayer.repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
+        public class SearchTermValue
+        {
+            public string Value { get; set; }
+            public SearchTermType Type { get; set; }
+        }
+
+        public enum SearchTermType
+        {
+            Numeric,
+            String
+        }
+
         private readonly ITitleRepository _titleRepository;
 
         public CustomerRepository()
@@ -43,7 +55,7 @@ namespace datalayer.repositories
             var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers", conn))
+            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers;", conn))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
@@ -59,25 +71,73 @@ namespace datalayer.repositories
 
         public List<Customer> Search(Customer c)
         {
-            List<Customer> allCustomers = this.GetAll();
+            var searchTerms = new Dictionary<string, SearchTermValue>();
+            
+            AppendSearchTermValue(searchTerms, "titleid", c.Title.Id);
+            AppendSearchTermValue(searchTerms, "firstname", c.FirstName);
+            AppendSearchTermValue(searchTerms, "lastname", c.LastName);
+            AppendSearchTermValue(searchTerms, "addressline1", c.AddressLine1);
+            AppendSearchTermValue(searchTerms, "addresspostcode", c.AddressPostcode);
 
-            var searchResults = new List<Customer>();
+            var searchSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers";
 
-            foreach (Customer customer in allCustomers)
+            if (searchTerms.Count > 0)
             {
-                if ( 
-                    (c.Title.Id == 0 || c.Title.Id == customer.Title.Id)
-                    && (string.IsNullOrEmpty(c.FirstName) || c.FirstName == customer.FirstName)
-                    && (string.IsNullOrEmpty(c.LastName) || c.LastName == customer.LastName)
-                    && (string.IsNullOrEmpty(c.AddressLine1) || c.AddressLine1 == customer.AddressLine1)
-                    && (string.IsNullOrEmpty(c.AddressPostcode) || c.AddressPostcode == customer.AddressPostcode)
-                    )
+                searchSql += " WHERE ";
+            }
+
+            foreach (var key in searchTerms.Keys)
+            {
+                searchSql += key + "=";
+
+                if (searchTerms[key].Type == SearchTermType.Numeric)
                 {
-                    searchResults.Add(customer);
+                    searchSql += searchTerms[key].Value;
+                }
+                else if (searchTerms[key].Type == SearchTermType.String)
+                {
+                    searchSql += "'" + searchTerms[key].Value + "'";
+                }
+
+                searchSql += " AND ";
+            }
+
+            searchSql = searchSql.Substring(0, searchSql.Length-5);
+            searchSql += ";";
+
+            List<Customer> customers = new List<Customer>();
+
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
+
+            using (var command = new NpgsqlCommand(searchSql, conn))
+            {
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    customers.Add(this.ParseCustomerFromReader(reader));
                 }
             }
 
-            return searchResults;
+            conn.Close();
+
+            return customers;
+        }
+
+        private void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, int value)
+        {
+            if (value != 0)
+            {
+                searchTerms.Add(key, new SearchTermValue { Value = value.ToString(), Type = SearchTermType.Numeric });
+            }
+        }
+
+        private void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                searchTerms.Add(key, new SearchTermValue { Value = value, Type = SearchTermType.String });
+            }
         }
 
         public void Add(Customer c)
