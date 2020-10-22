@@ -1,14 +1,26 @@
 using System.Collections.Generic;
 using System.IO;
 using datalayer.interfaces;
-    using datalayer.models;
+using datalayer.models;
+using Npgsql;
 
 namespace datalayer.repositories
 {
     public class CustomerRepository : ICustomerRepository
     {
+        public class SearchTermValue
+        {
+            public string Value { get; set; }
+            public SearchTermType Type { get; set; }
+        }
+
+        public enum SearchTermType
+        {
+            Numeric,
+            String
+        }
+
         private readonly ITitleRepository _titleRepository;
-        private readonly string _customerFileLocation = @"C:\Users\t_war\Documents\projects\code\sql-injection-attack-demo\datalayer\datalayer\data\customers.csv";
 
         public CustomerRepository()
         {
@@ -17,47 +29,150 @@ namespace datalayer.repositories
 
         public Customer Get(int id)
         {
-            // preload the list of titles and store in dictionary for later use
-            List<Title> titles = _titleRepository.GetAll();
-            var titleLookup = new Dictionary<int, Title>();
-            foreach (Title title in titles)
-            {
-                titleLookup.Add(title.Id, title);
-            }
-
             var customer = new Customer();
 
-            using (StreamReader sr = new StreamReader(_customerFileLocation))
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
+
+            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers WHERE id = " + id.ToString(), conn))
             {
-                // read the header
-                sr.ReadLine();
-
-                while(sr.Peek() != -1)
+                var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
-                    if (System.Convert.ToInt32(splitLine[0]) == id)
-                    {
-                        customer = new Customer
-                        {
-                            Id = System.Convert.ToInt32(splitLine[0]),
-                            Title = titleLookup[System.Convert.ToInt32(splitLine[1])],
-                            FirstName = splitLine[2],
-                            LastName = splitLine[3],
-                            AddressLine1 = splitLine[4],
-                            AddressPostcode = splitLine[5]
-                        };
-
-                        break;
-                    }                    
+                    customer = this.ParseCustomerFromReader(reader);
                 }
             }
+
+            conn.Close();
 
             return customer;
         }
 
         public List<Customer> GetAll()
         {
-            // preload the list of titles and store in dictionary for later use
+            List<Customer> customers = new List<Customer>();
+
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
+
+            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers;", conn))
+            {
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    customers.Add(this.ParseCustomerFromReader(reader));
+                }
+            }
+
+            conn.Close();
+
+            return customers;
+        }
+
+        public List<Customer> Search(Customer c)
+        {
+            var searchTerms = new Dictionary<string, SearchTermValue>();
+            
+            AppendSearchTermValue(searchTerms, "titleid", c.Title.Id);
+            AppendSearchTermValue(searchTerms, "firstname", c.FirstName);
+            AppendSearchTermValue(searchTerms, "lastname", c.LastName);
+            AppendSearchTermValue(searchTerms, "addressline1", c.AddressLine1);
+            AppendSearchTermValue(searchTerms, "addresspostcode", c.AddressPostcode);
+
+            var searchSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers";
+
+            if (searchTerms.Count > 0)
+            {
+                searchSql += " WHERE ";
+            }
+
+            foreach (var key in searchTerms.Keys)
+            {
+                searchSql += key + "=";
+
+                if (searchTerms[key].Type == SearchTermType.Numeric)
+                {
+                    searchSql += searchTerms[key].Value;
+                }
+                else if (searchTerms[key].Type == SearchTermType.String)
+                {
+                    searchSql += "'" + searchTerms[key].Value + "'";
+                }
+
+                searchSql += " AND ";
+            }
+
+            searchSql = searchSql.Substring(0, searchSql.Length-5);
+            searchSql += ";";
+
+            List<Customer> customers = new List<Customer>();
+
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
+
+            using (var command = new NpgsqlCommand(searchSql, conn))
+            {
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    customers.Add(this.ParseCustomerFromReader(reader));
+                }
+            }
+
+            conn.Close();
+
+            return customers;
+        }
+
+        private void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, int value)
+        {
+            if (value != 0)
+            {
+                searchTerms.Add(key, new SearchTermValue { Value = value.ToString(), Type = SearchTermType.Numeric });
+            }
+        }
+
+        private void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, string value)
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                searchTerms.Add(key, new SearchTermValue { Value = value, Type = SearchTermType.String });
+            }
+        }
+
+        public void Add(Customer c)
+        {
+            var insertSql = "INSERT INTO public.customers (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";
+            insertSql += "(" + c.Title.Id.ToString() + ", ";
+            insertSql += "'" + c.FirstName + "', ";
+            insertSql += "'" + c.LastName + "', ";
+            insertSql += "'" + c.AddressLine1 + "', ";
+            insertSql += "'" + c.AddressPostcode + "');";
+
+            this.ExecuteNonQuery(insertSql);
+        }
+
+        public void Update(Customer c)
+        {
+            var updateSql = "UPDATE public.customers SET ";
+            updateSql += "titleid = " + c.Title.Id.ToString() + ", ";
+            updateSql += "firstname = '" + c.FirstName + "', ";
+            updateSql += "lastname = '" + c.LastName + "', ";
+            updateSql += "addressline1 = '" + c.AddressLine1 + "', ";
+            updateSql += "addresspostcode = '" + c.AddressPostcode + "' ";
+            updateSql += "WHERE id = " + c.Id.ToString();
+
+            this.ExecuteNonQuery(updateSql);
+        }
+
+        public void Delete(int id)
+        {
+            var deleteSql = "DELETE FROM public.customers WHERE id = " + id.ToString();
+            this.ExecuteNonQuery(deleteSql);
+        }
+
+        private Customer ParseCustomerFromReader(NpgsqlDataReader reader)
+        {
             List<Title> titles = _titleRepository.GetAll();
             var titleLookup = new Dictionary<int, Title>();
             foreach (Title title in titles)
@@ -65,117 +180,28 @@ namespace datalayer.repositories
                 titleLookup.Add(title.Id, title);
             }
 
-            List<Customer> customers = new List<Customer>();
-
-            using (StreamReader sr = new StreamReader(_customerFileLocation))
+            return new Customer
             {
-                // read the header
-                sr.ReadLine();
-
-                while(sr.Peek() != -1)
-                {
-                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
-                    customers.Add(new Customer
-                    {
-                        Id = System.Convert.ToInt32(splitLine[0]),
-                        Title = titleLookup[System.Convert.ToInt32(splitLine[1])],
-                        FirstName = splitLine[2],
-                        LastName = splitLine[3],
-                        AddressLine1 = splitLine[4],
-                        AddressPostcode = splitLine[5]
-                    });
-                }
-            }
-
-            return customers;
+                Id = System.Int32.Parse(reader["id"].ToString()),
+                Title = titleLookup[System.Int32.Parse(reader["titleid"].ToString())],
+                FirstName = reader["firstname"].ToString(),
+                LastName = reader["lastname"].ToString(),
+                AddressLine1 = reader["addressline1"].ToString(),
+                AddressPostcode = reader["addresspostcode"].ToString()
+            };
         }
 
-        public List<Customer> Search(Customer c)
+        private void ExecuteNonQuery(string sql)
         {
-            List<Customer> allCustomers = this.GetAll();
+            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            conn.Open();
 
-            var searchResults = new List<Customer>();
-
-            foreach (Customer customer in allCustomers)
+            using (var cmd = new NpgsqlCommand(sql, conn))
             {
-                if ( 
-                    (c.Title.Id == 0 || c.Title.Id == customer.Title.Id)
-                    && (string.IsNullOrEmpty(c.FirstName) || c.FirstName == customer.FirstName)
-                    && (string.IsNullOrEmpty(c.LastName) || c.LastName == customer.LastName)
-                    && (string.IsNullOrEmpty(c.AddressLine1) || c.AddressLine1 == customer.AddressLine1)
-                    && (string.IsNullOrEmpty(c.AddressPostcode) || c.AddressPostcode == customer.AddressPostcode)
-                    )
-                {
-                    searchResults.Add(customer);
-                }
+                cmd.ExecuteNonQuery();
             }
 
-            return searchResults;
-        }
-
-        public void Add(Customer c)
-        {
-            int currentMaxId = 0;
-            using (StreamReader sr = new StreamReader(_customerFileLocation))
-            {
-                // read the header
-                sr.ReadLine();
-
-                while(sr.Peek() != -1)
-                {
-                    string[] splitLine = sr.ReadLine().Split(new[] { ","}, System.StringSplitOptions.RemoveEmptyEntries);
-                    int id = System.Convert.ToInt32(splitLine[0]);
-                    if (id > currentMaxId)
-                    {
-                        currentMaxId = id;
-                    }
-                }
-            }
-
-            using (StreamWriter sw = new StreamWriter(_customerFileLocation, true))
-            {
-                sw.WriteLine(++currentMaxId + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
-            }
-        }
-
-        public void Update(Customer c)
-        {
-            List<Customer> customers = this.GetAll();
-            
-            using (StreamWriter sw = new StreamWriter(_customerFileLocation))
-            {
-                sw.WriteLine("Id,TitleId,FirstName,LastName,AddressLine1,AddressPostcode");
-
-                foreach (var customer in customers)
-                {
-                    if (customer.Id != c.Id)
-                    {
-                        sw.WriteLine(customer.Id + "," + customer.Title.Id + "," + customer.FirstName + "," + customer.LastName + "," + customer.AddressLine1 + "," + customer.AddressPostcode);
-                    }
-                    else
-                    {
-                        sw.WriteLine(c.Id + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
-                    }                    
-                }
-            }
-        }
-
-        public void Delete(int id)
-        {
-            List<Customer> customers = this.GetAll();
-            
-            using (StreamWriter sw = new StreamWriter(_customerFileLocation))
-            {
-                sw.WriteLine("Id,TitleId,FirstName,LastName,AddressLine1,AddressPostcode");
-
-                foreach (var c in customers)
-                {
-                    if (c.Id != id)
-                    {
-                        sw.WriteLine(c.Id + "," + c.Title.Id + "," + c.FirstName + "," + c.LastName + "," + c.AddressLine1 + "," + c.AddressPostcode);
-                    }
-                }
-            }
+            conn.Close();
         }
     }
 }
