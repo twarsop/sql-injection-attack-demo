@@ -84,26 +84,26 @@ namespace datalayer.repositories
             if (searchTerms.Count > 0)
             {
                 searchSql += " WHERE ";
-            }
 
-            foreach (var key in searchTerms.Keys)
-            {
-                searchSql += key + "=";
-
-                if (searchTerms[key].Type == SearchTermType.Numeric)
+                foreach (var key in searchTerms.Keys)
                 {
-                    searchSql += searchTerms[key].Value;
-                }
-                else if (searchTerms[key].Type == SearchTermType.String)
-                {
-                    searchSql += "'" + searchTerms[key].Value + "'";
+                    searchSql += key + "=";
+
+                    if (searchTerms[key].Type == SearchTermType.Numeric)
+                    {
+                        searchSql += searchTerms[key].Value;
+                    }
+                    else if (searchTerms[key].Type == SearchTermType.String)
+                    {
+                        searchSql += "'" + searchTerms[key].Value + "'";
+                    }
+
+                    searchSql += " AND ";
                 }
 
-                searchSql += " AND ";
-            }
-
-            searchSql = searchSql.Substring(0, searchSql.Length-5);
-            searchSql += ";";
+                searchSql = searchSql.Substring(0, searchSql.Length-5);
+                searchSql += ";";
+            }            
 
             List<Customer> customers = new List<Customer>();
 

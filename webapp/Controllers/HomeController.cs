@@ -130,6 +130,7 @@ namespace webapp.Controllers
             List<datalayer.models.Title> allTitles = titleRepository.GetAll();
 
             var titles = new List<Title>();
+            titles.Add(new Title{ Id = 0, Name = "Please Select..." });
             foreach (var title in allTitles)
             {
                 titles.Add(new Title{ Id = title.Id, Name = title.Name });
