@@ -21,20 +21,24 @@ namespace datalayer.repositories
         }
 
         private readonly ITitleRepository _titleRepository;
+        private readonly string _connstr;
+        private readonly string _tablestr;
 
         public CustomerRepository()
         {
             _titleRepository = new TitleRepository();
+            _connstr = "Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo";
+            _tablestr = "public.customers";
         }
 
         public Customer Get(int id)
         {
             var customer = new Customer();
 
-            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers WHERE id = " + id.ToString(), conn))
+            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + " WHERE id = " + id.ToString(), conn))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
@@ -52,10 +56,10 @@ namespace datalayer.repositories
         {
             List<Customer> customers = new List<Customer>();
 
-            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers;", conn))
+            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + ";", conn))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
@@ -79,7 +83,7 @@ namespace datalayer.repositories
             AppendSearchTermValue(searchTerms, "addressline1", c.AddressLine1);
             AppendSearchTermValue(searchTerms, "addresspostcode", c.AddressPostcode);
 
-            var searchSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM public.customers";
+            var searchSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr;
 
             if (searchTerms.Count > 0)
             {
@@ -107,7 +111,7 @@ namespace datalayer.repositories
 
             List<Customer> customers = new List<Customer>();
 
-            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
             using (var command = new NpgsqlCommand(searchSql, conn))
@@ -142,7 +146,7 @@ namespace datalayer.repositories
 
         public void Add(Customer c)
         {
-            var insertSql = "INSERT INTO public.customers (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";
+            var insertSql = "INSERT INTO " + this._tablestr + " (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";
             insertSql += "(" + c.Title.Id.ToString() + ", ";
             insertSql += "'" + c.FirstName + "', ";
             insertSql += "'" + c.LastName + "', ";
@@ -154,7 +158,7 @@ namespace datalayer.repositories
 
         public void Update(Customer c)
         {
-            var updateSql = "UPDATE public.customers SET ";
+            var updateSql = "UPDATE " + this._tablestr + " SET ";
             updateSql += "titleid = " + c.Title.Id.ToString() + ", ";
             updateSql += "firstname = '" + c.FirstName + "', ";
             updateSql += "lastname = '" + c.LastName + "', ";
@@ -167,7 +171,7 @@ namespace datalayer.repositories
 
         public void Delete(int id)
         {
-            var deleteSql = "DELETE FROM public.customers WHERE id = " + id.ToString();
+            var deleteSql = "DELETE FROM " + this._tablestr + " WHERE id = " + id.ToString();
             this.ExecuteNonQuery(deleteSql);
         }
 
@@ -193,7 +197,7 @@ namespace datalayer.repositories
 
         private void ExecuteNonQuery(string sql)
         {
-            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
             using (var cmd = new NpgsqlCommand(sql, conn))
