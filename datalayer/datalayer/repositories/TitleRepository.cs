@@ -8,14 +8,23 @@ namespace datalayer.repositories
 {
     public class TitleRepository : ITitleRepository
     {
+        private readonly string _connstr;
+        private readonly string _tablestr;
+
+        public TitleRepository()
+        {
+            _connstr = "Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo";
+            _tablestr = "public.titles";
+        }
+
         public List<Title> GetAll()
         {
             List<Title> titles = new List<Title>();
 
-            var conn = new NpgsqlConnection("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            var conn = new NpgsqlConnection(_connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT id, name FROM public.titles", conn))
+            using (var command = new NpgsqlCommand("SELECT id, name FROM " + _tablestr, conn))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
