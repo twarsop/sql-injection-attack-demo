@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
 using datalayer.interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using datalayer.models;
 using Npgsql;
 
@@ -13,7 +15,11 @@ namespace datalayer.repositories
 
         public TitleRepository()
         {
-            _connstr = "Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo";
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("appsettings.json");
+            var configuration = configurationBuilder.Build();            
+            _connstr = configuration.GetValue<string>("ConnStr");
+            
             _tablestr = "public.titles";
         }
 
