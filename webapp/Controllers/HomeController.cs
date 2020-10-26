@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using datalayer;
+using DataLayer;
 using webapp.Models;
 
 namespace webapp.Controllers
@@ -21,13 +21,13 @@ namespace webapp.Controllers
 
         public IActionResult Index()
         {
-            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
             var customers = customersRepository.GetAll();
 
             return IndexHelper(customers);
         }
 
-        public IActionResult IndexHelper(List<datalayer.models.Customer> customers)
+        public IActionResult IndexHelper(List<DataLayer.Models.Customer> customers)
         {
             var viewModel = new IndexViewModel{ Customers = new List<Customer>() };
 
@@ -56,17 +56,17 @@ namespace webapp.Controllers
 
         public IActionResult SaveCustomer(CustomerViewModel a)
         {
-            var customer = new datalayer.models.Customer
+            var customer = new DataLayer.Models.Customer
             {
                 Id = a.Customer.Id,
-                Title = new datalayer.models.Title { Id = System.Convert.ToInt32(a.CustomerTitleId) },
+                Title = new DataLayer.Models.Title { Id = System.Convert.ToInt32(a.CustomerTitleId) },
                 FirstName = a.Customer.FirstName,
                 LastName = a.Customer.LastName,
                 AddressLine1 = a.Customer.AddressLine1,
                 AddressPostcode = a.Customer.AddressPostcode
             };
 
-            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
             
             if (customer.Id == 0)
             {
@@ -82,7 +82,7 @@ namespace webapp.Controllers
 
         public IActionResult DeleteCustomer(int customerId)
         {
-            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
             customersRepository.Delete(customerId);
 
             return RedirectToAction("Index");
@@ -90,16 +90,16 @@ namespace webapp.Controllers
 
         public IActionResult SearchCustomers(IndexViewModel a)
         {
-            var searchDetails = new datalayer.models.Customer
+            var searchDetails = new DataLayer.Models.Customer
             {
-                Title = new datalayer.models.Title { Id = System.Convert.ToInt32(a.SearchDetails.CustomerTitleId) },
+                Title = new DataLayer.Models.Title { Id = System.Convert.ToInt32(a.SearchDetails.CustomerTitleId) },
                 FirstName = a.SearchDetails.Customer.FirstName,
                 LastName = a.SearchDetails.Customer.LastName,
                 AddressLine1 = a.SearchDetails.Customer.AddressLine1,
                 AddressPostcode = a.SearchDetails.Customer.AddressPostcode
             };
 
-            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
             var customers = customersRepository.Search(searchDetails);
 
             return IndexHelper(customers);
@@ -107,7 +107,7 @@ namespace webapp.Controllers
 
         public IActionResult EditCustomer(int customerId)
         {
-            datalayer.interfaces.ICustomerRepository customersRepository = new datalayer.repositories.CustomerRepository();
+            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
             var customer = customersRepository.Get(customerId);
 
             return View(new CustomerViewModel { 
@@ -126,8 +126,8 @@ namespace webapp.Controllers
 
         private List<Title> BuildTitleList()
         {
-            datalayer.interfaces.ITitleRepository titleRepository = new datalayer.repositories.TitleRepository();
-            List<datalayer.models.Title> allTitles = titleRepository.GetAll();
+            DataLayer.Interfaces.ITitleRepository titleRepository = new DataLayer.Repositories.TitleRepository();
+            List<DataLayer.Models.Title> allTitles = titleRepository.GetAll();
 
             var titles = new List<Title>();
             titles.Add(new Title{ Id = 0, Name = "Please Select..." });

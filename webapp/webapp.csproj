@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="datalayer">
-      <HintPath>..\datalayer\datalayer\bin\Debug\netstandard2.0\datalayer.dll</HintPath>
+    <Reference Include="DataLayer">
+      <HintPath>..\DataLayer\DataLayer\bin\Debug\netstandard2.0\DataLayer.dll</HintPath>
     </Reference>
   </ItemGroup>
 

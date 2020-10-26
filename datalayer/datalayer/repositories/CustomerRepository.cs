@@ -2,11 +2,11 @@ using System.Collections.Generic;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using datalayer.interfaces;
-using datalayer.models;
+using DataLayer.Interfaces;
+using DataLayer.Models;
 using Npgsql;
 
-namespace datalayer.repositories
+namespace DataLayer.Repositories
 {
     public class CustomerRepository : ICustomerRepository
     {

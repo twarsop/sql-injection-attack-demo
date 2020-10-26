@@ -1,4 +1,4 @@
-namespace datalayer.models
+namespace DataLayer.Models
 {
     public class Customer
     {

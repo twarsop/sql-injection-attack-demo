@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using datalayer.models;
+using DataLayer.Models;
 
-namespace datalayer.interfaces
+namespace DataLayer.Interfaces
 {
     public interface ITitleRepository
     {

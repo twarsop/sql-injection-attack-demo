@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
-using datalayer.interfaces;
+using DataLayer.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using datalayer.models;
+using DataLayer.Models;
 using Npgsql;
 
-namespace datalayer.repositories
+namespace DataLayer.Repositories
 {
     public class TitleRepository : ITitleRepository
     {
