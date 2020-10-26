@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Web.Mvc;
 
-namespace webapp.Models
+namespace WebApp.Models
 {
     public class CustomerViewModel
     {

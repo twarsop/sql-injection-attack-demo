@@ -1,4 +1,4 @@
-namespace webapp.Models
+namespace WebApp.Models
 {
     public class Customer
     {

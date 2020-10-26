@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace webapp.Models
+namespace WebApp.Models
 {
     public class IndexViewModel
     {
