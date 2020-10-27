@@ -8,7 +8,7 @@
             "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
-            //"preLaunchTask": "build",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/WebApp/bin/Debug/netcoreapp3.1/WebApp.dll",
             "args": [],
             "cwd": "${workspaceFolder}/WebApp",
