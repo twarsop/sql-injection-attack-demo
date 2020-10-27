@@ -1,6 +1,6 @@
 @model WebApp.Models.CustomerViewModel
 
-@using (Html.BeginForm("SaveCustomer", "Home", FormMethod.Post))
+@using (Html.BeginForm("SaveCustomer", "Customer", FormMethod.Post))
 {
     <div class="field-container center" style="width:500px;">
         <div style="display:none;">
@@ -46,6 +46,6 @@
 
     <div class="center" style="width:351px;">
         <input type="submit" class="button" value="Save Customer" />
-        <input type="button" class="button" value="Cancel" onclick="location.href='@Url.Action("Index", "Home")'" />
+        <input type="button" class="button" value="Cancel" onclick="location.href='@Url.Action("Index", "Customer")'" />
     </div>
 }

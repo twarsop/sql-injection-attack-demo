@@ -8,7 +8,7 @@
     <h1>Customers</h1>
 </div>
 
-@using (Html.BeginForm("SearchCustomers", "Home", FormMethod.Post))
+@using (Html.BeginForm("SearchCustomers", "Customer", FormMethod.Post))
 {
     <div class="field-container center" style="width:1005px; border: 1px solid #93aeff; padding: 10px !important; margin-top: 20px; margin-bottom: 20px;">
         <div style="font-size: 26px; font-weight: 500;">Search</div>
@@ -58,7 +58,7 @@
 
             <div class="center" style="width:351px;">
                 <input type="submit" class="button" value="Search" />
-                <input type="button" class="button" value="Clear Search" onclick="location.href='@Url.Action("Index", "Home")'" />
+                <input type="button" class="button" value="Clear Search" onclick="location.href='@Url.Action("Index", "Customer")'" />
             </div>
         </div>
 
@@ -67,7 +67,7 @@
 }
 
 <div class="center" style="width: 1005px;">
-    <input type="button" class="button" style="margin-bottom:20px;" value="Add Customer" onclick="location.href='@Url.Action("AddCustomer", "Home")'" />
+    <input type="button" class="button" style="margin-bottom:20px;" value="Add Customer" onclick="location.href='@Url.Action("AddCustomer", "Customer")'" />
 
     <table>
         <tr>
@@ -89,8 +89,8 @@
                 <td>@customer.LastName</td>
                 <td>@customer.AddressLine1</td>
                 <td>@customer.AddressPostcode</td>
-                <td><input type="button" class="small-button" value="Edit" onclick="location.href='@Url.Action("EditCustomer", "Home", new { customerId = customer.Id })'" /></td>
-                <td><input type="button" class="small-button" value="Delete" onclick="location.href='@Url.Action("DeleteCustomer", "Home", new { customerId = customer.Id })'" /></td>
+                <td><input type="button" class="small-button" value="Edit" onclick="location.href='@Url.Action("EditCustomer", "Customer", new { customerId = customer.Id })'" /></td>
+                <td><input type="button" class="small-button" value="Delete" onclick="location.href='@Url.Action("DeleteCustomer", "Customer", new { customerId = customer.Id })'" /></td>
             </tr>
         }
     </table>
