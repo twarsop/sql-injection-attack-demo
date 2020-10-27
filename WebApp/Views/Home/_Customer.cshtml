@@ -1,0 +1,51 @@
+@model WebApp.Models.CustomerViewModel
+
+@using (Html.BeginForm("SaveCustomer", "Home", FormMethod.Post))
+{
+    <div class="field-container center" style="width:500px;">
+        <div style="display:none;">
+            <div class="field">
+                <div class="label">Id: </div>
+                @Html.TextBoxFor(m => m.Customer.Id, new { @class="value" })
+                <div style="clear:both"></div>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="label">Title: </div>
+            @Html.DropDownListFor(m => m.CustomerTitleId, new SelectList(Model.Titles, "Id", "Name"), new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
+
+        <div class="field">
+            <div class="label">First Name: </div>
+            @Html.TextBoxFor(m => m.Customer.FirstName, new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
+
+        <div class="field">
+            <div class="label">Last Name: </div>
+            @Html.TextBoxFor(m => m.Customer.LastName, new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
+
+        <div class="field">
+            <div class="label">Address Line 1: </div>
+            @Html.TextBoxFor(m => m.Customer.AddressLine1, new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
+
+        <div class="field">
+            <div class="label">Address Postcode: </div>
+            @Html.TextBoxFor(m => m.Customer.AddressPostcode, new { @class="value"})
+            <div style="clear:both"></div>
+        </div>
+
+        <div style="clear:both"></div>
+    </div>
+
+    <div class="center" style="width:351px;">
+        <input type="submit" class="button" value="Save Customer" />
+        <input type="button" class="button" value="Cancel" onclick="location.href='@Url.Action("Index", "Home")'" />
+    </div>
+}
