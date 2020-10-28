@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using DataLayer;
+using DataLayer.Interfaces;
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -13,18 +13,19 @@ namespace WebApp.Controllers
     public class CustomerController : Controller
     {
         private readonly ILogger<CustomerController> _logger;
+        private readonly ITitleRepository _titleRepository;
+        private readonly ICustomerRepository _customerRepository;
 
-        public CustomerController(ILogger<CustomerController> logger)
+        public CustomerController(ILogger<CustomerController> logger, ITitleRepository titleRepository, ICustomerRepository customerRepository)
         {
             _logger = logger;
+            _titleRepository = titleRepository;
+            _customerRepository = customerRepository;
         }
 
         public IActionResult Index()
         {
-            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
-            var customers = customersRepository.GetAll();
-
-            return IndexHelper(customers);
+            return IndexHelper(_customerRepository.GetAll());
         }
 
         public IActionResult IndexHelper(List<DataLayer.Models.Customer> customers)
@@ -66,15 +67,13 @@ namespace WebApp.Controllers
                 AddressPostcode = a.Customer.AddressPostcode
             };
 
-            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
-            
             if (customer.Id == 0)
             {
-                customersRepository.Add(customer);
+                _customerRepository.Add(customer);
             }
             else
             {
-                customersRepository.Update(customer);
+                _customerRepository.Update(customer);
             }
 
             return RedirectToAction("Index");
@@ -82,8 +81,7 @@ namespace WebApp.Controllers
 
         public IActionResult DeleteCustomer(int customerId)
         {
-            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
-            customersRepository.Delete(customerId);
+            _customerRepository.Delete(customerId);
 
             return RedirectToAction("Index");
         }
@@ -99,16 +97,12 @@ namespace WebApp.Controllers
                 AddressPostcode = a.SearchDetails.Customer.AddressPostcode
             };
 
-            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
-            var customers = customersRepository.Search(searchDetails);
-
-            return IndexHelper(customers);
+            return IndexHelper(_customerRepository.Search(searchDetails));
         }
 
         public IActionResult EditCustomer(int customerId)
         {
-            DataLayer.Interfaces.ICustomerRepository customersRepository = new DataLayer.Repositories.CustomerRepository();
-            var customer = customersRepository.Get(customerId);
+            var customer = _customerRepository.Get(customerId);
 
             return View(new CustomerViewModel { 
                 Customer = new Customer {
@@ -126,8 +120,7 @@ namespace WebApp.Controllers
 
         private List<Title> BuildTitleList()
         {
-            DataLayer.Interfaces.ITitleRepository titleRepository = new DataLayer.Repositories.TitleRepository();
-            List<DataLayer.Models.Title> allTitles = titleRepository.GetAll();
+            List<DataLayer.Models.Title> allTitles = _titleRepository.GetAll();
 
             var titles = new List<Title>();
             titles.Add(new Title{ Id = 0, Name = "Please Select..." });
