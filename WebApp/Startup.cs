@@ -26,7 +26,7 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ITitleRepository, TitleRepository>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepositoryEF>();
 
             services.AddControllersWithViews();
         }
