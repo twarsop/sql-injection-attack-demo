@@ -20,12 +20,12 @@ namespace DataLayer.Repositories
 
             builder.Entity<DataLayer.Models.EF.Title>(entity => {
                 entity.ToTable("titles");
-                entity.HasKey(t => t.id);
+                entity.HasKey(t => t.Id);
             });
 
             builder.Entity<DataLayer.Models.EF.Customer>(entity => {
                 entity.ToTable("customers");
-                entity.HasKey(c => c.id);
+                entity.HasKey(c => c.Id);
             });            
         }
     }    

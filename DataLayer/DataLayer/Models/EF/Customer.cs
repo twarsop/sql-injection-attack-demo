@@ -1,13 +1,22 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace DataLayer.Models.EF
 {
     public class Customer
     {
-        public int id { get; set; }
-        public int titleid { get; set; }
+        [Column("id")]
+        public int Id { get; set; }
+        [Column("titleid")]
+        public int TitleId { get; set; }
+        [Column("firstname")]
+        public string FirstName { get; set; }
+        [Column("lastname")]
+        public string LastName { get; set; }
+        [Column("addressline1")]
+        public string AddressLine1 { get; set; }
+        [Column("addresspostcode")]
+        public string AddressPostcode { get; set; }
+
         public Title Title { get; set; }
-        public string firstname { get; set; }
-        public string lastname { get; set; }
-        public string addressline1 { get; set; }
-        public string addresspostcode { get; set; }
     }    
 }

@@ -40,12 +40,12 @@ namespace DataLayer.Repositories
                 {
                     customers.Add(new Customer
                     {
-                        Id = customer.id,
-                        Title = new Title{ Id = customer.Title.id, Name = customer.Title.name },
-                        FirstName = customer.firstname,
-                        LastName = customer.lastname,
-                        AddressLine1 = customer.addressline1,
-                        AddressPostcode = customer.addresspostcode
+                        Id = customer.Id,
+                        Title = new Title{ Id = customer.Title.Id, Name = customer.Title.Name },
+                        FirstName = customer.FirstName,
+                        LastName = customer.LastName,
+                        AddressLine1 = customer.AddressLine1,
+                        AddressPostcode = customer.AddressPostcode
                     });
                 }
             }
