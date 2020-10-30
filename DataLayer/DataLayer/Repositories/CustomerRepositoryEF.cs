@@ -36,7 +36,7 @@ namespace DataLayer.Repositories
             using (var context = new MyDbContext(optionsBuilder.Options))
             {
                 var customersEF = context.Customers.Include(c => c.Title).ToList();
-                foreach (DataLayer.Models.EF.Customer customer in customersEF)
+                foreach (DataLayer.Models.Customer customer in customersEF)
                 {
                     customers.Add(new Customer
                     {
