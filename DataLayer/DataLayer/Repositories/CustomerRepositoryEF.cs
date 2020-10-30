@@ -35,13 +35,13 @@ namespace DataLayer.Repositories
             optionsBuilder.UseNpgsql("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
             using (var context = new MyDbContext(optionsBuilder.Options))
             {
-                var customersEF = context.Customers.ToList();
+                var customersEF = context.Customers.Include(c => c.Title).ToList();
                 foreach (DataLayer.Models.EF.Customer customer in customersEF)
                 {
                     customers.Add(new Customer
                     {
                         Id = customer.id,
-                        Title = titleLookup[customer.titleid],
+                        Title = new Title{ Id = customer.Title.id, Name = customer.Title.name },
                         FirstName = customer.firstname,
                         LastName = customer.lastname,
                         AddressLine1 = customer.addressline1,

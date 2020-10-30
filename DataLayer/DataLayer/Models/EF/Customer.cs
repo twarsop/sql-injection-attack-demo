@@ -4,6 +4,7 @@ namespace DataLayer.Models.EF
     {
         public int id { get; set; }
         public int titleid { get; set; }
+        public Title Title { get; set; }
         public string firstname { get; set; }
         public string lastname { get; set; }
         public string addressline1 { get; set; }
