@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using DataLayer.Models;
 
 namespace DataLayer.Repositories
 {
     public class MyDbContext : DbContext
     {
-        public DbSet<DataLayer.Models.Customer> Customers { get; set; }
-        public DbSet<DataLayer.Models.Title> Titles { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Title> Titles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
@@ -18,12 +19,12 @@ namespace DataLayer.Repositories
         {
             builder.HasDefaultSchema("public");
 
-            builder.Entity<DataLayer.Models.Title>(entity => {
+            builder.Entity<Title>(entity => {
                 entity.ToTable("titles");
                 entity.HasKey(t => t.Id);
             });
 
-            builder.Entity<DataLayer.Models.Customer>(entity => {
+            builder.Entity<Customer>(entity => {
                 entity.ToTable("customers");
                 entity.HasKey(c => c.Id);
             });            
