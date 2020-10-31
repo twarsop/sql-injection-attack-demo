@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DataLayer.Repositories.DefendWithEF
 {
-    public class MyDbContext : DbContext
+    public class CustomerDbContext : DbContext
     {
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Title> Titles { get; set; }
@@ -13,7 +13,7 @@ namespace DataLayer.Repositories.DefendWithEF
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql(this._connstr);
 
-        public MyDbContext(DbContextOptions<MyDbContext> options)
+        public CustomerDbContext(DbContextOptions<CustomerDbContext> options)
             : base(options)
         { 
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();

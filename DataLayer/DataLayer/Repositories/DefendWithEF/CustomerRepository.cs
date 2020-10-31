@@ -29,9 +29,9 @@ namespace DataLayer.Repositories.DefendWithEF
 
         public List<Customer> GetAll()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<MyDbContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<CustomerDbContext>();
             optionsBuilder.UseNpgsql(this._connstr);
-            using (var context = new MyDbContext(optionsBuilder.Options))
+            using (var context = new CustomerDbContext(optionsBuilder.Options))
             {
                 return context.Customers.Include(c => c.Title).ToList();
             }
