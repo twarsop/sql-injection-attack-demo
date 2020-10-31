@@ -7,17 +7,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace DataLayer.Repositories.DefendWithEF
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository : BaseRepository, ICustomerRepository
     {
-        private readonly string _connstr;
-
-        public CustomerRepository()
-        {
-            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("appsettings.json");
-            var configuration = configurationBuilder.Build();            
-            _connstr = configuration.GetValue<string>("ConnStr");
-        }
+        public CustomerRepository() : base() { }
 
         public Customer Get(int id)
         {
