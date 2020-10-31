@@ -9,13 +9,10 @@ namespace DataLayer.Repositories.DefendWithEF
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly ITitleRepository _titleRepository;
         private readonly string _connstr;
 
         public CustomerRepository()
         {
-            _titleRepository = new DataLayer.Repositories.Attack.TitleRepository();
-
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddJsonFile("appsettings.json");
             var configuration = configurationBuilder.Build();            
