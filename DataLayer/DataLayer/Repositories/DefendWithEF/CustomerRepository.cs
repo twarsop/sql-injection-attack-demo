@@ -13,14 +13,15 @@ namespace DataLayer.Repositories.DefendWithEF
 
         public Customer Get(int id)
         {
-            return new Customer();
+            using (var context = this.GetContext())
+            {
+                return context.Customers.Include(c => c.Title).SingleOrDefault(c => c.Id == id);
+            }
         }
 
         public List<Customer> GetAll()
         {
-            var optionsBuilder = new DbContextOptionsBuilder<CustomerDbContext>();
-            optionsBuilder.UseNpgsql(this._connstr);
-            using (var context = new CustomerDbContext(optionsBuilder.Options))
+            using (var context = this.GetContext())
             {
                 return context.Customers.Include(c => c.Title).ToList();
             }
@@ -44,6 +45,13 @@ namespace DataLayer.Repositories.DefendWithEF
         public void Delete(int id)
         {
             
+        }
+
+        private CustomerDbContext GetContext()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<CustomerDbContext>();
+            optionsBuilder.UseNpgsql(this._connstr);
+            return new CustomerDbContext(optionsBuilder.Options);
         }
     }
 }
