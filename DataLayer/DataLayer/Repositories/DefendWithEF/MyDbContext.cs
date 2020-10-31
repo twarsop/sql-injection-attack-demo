@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using DataLayer.Models;
 
-namespace DataLayer.Repositories
+namespace DataLayer.Repositories.DefendWithEF
 {
     public class MyDbContext : DbContext
     {

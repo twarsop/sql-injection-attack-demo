@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using DataLayer.Models;
 using Npgsql;
 
-namespace DataLayer.Repositories
+namespace DataLayer.Repositories.Attack
 {
     public class TitleRepository : ITitleRepository
     {

@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace DataLayer.Repositories
+namespace DataLayer.Repositories.DefendWithEF
 {
-    public class CustomerRepositoryEF : ICustomerRepository
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly ITitleRepository _titleRepository;
 
-        public CustomerRepositoryEF()
+        public CustomerRepository()
         {
-            _titleRepository = new TitleRepository();
+            _titleRepository = new DataLayer.Repositories.Attack.TitleRepository();
         }
 
         public Customer Get(int id)
