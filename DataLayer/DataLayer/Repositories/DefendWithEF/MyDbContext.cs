@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using DataLayer.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace DataLayer.Repositories.DefendWithEF
 {
@@ -7,13 +8,19 @@ namespace DataLayer.Repositories.DefendWithEF
     {
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Title> Titles { get; set; }
+        private readonly string _connstr;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseNpgsql("Host=localhost;Username=postgres;Password=postgres;Database=sqlinjectionattackdemo");
+            => optionsBuilder.UseNpgsql(this._connstr);
 
         public MyDbContext(DbContextOptions<MyDbContext> options)
             : base(options)
-        { }
+        { 
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            configurationBuilder.AddJsonFile("appsettings.json");
+            var configuration = configurationBuilder.Build();            
+            _connstr = configuration.GetValue<string>("ConnStr");
+        }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
