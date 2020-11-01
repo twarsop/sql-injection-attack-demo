@@ -34,7 +34,13 @@ namespace DataLayer.Repositories.DefendWithEF
 
         public void Add(Customer c)
         {
-            
+            using (var context = this.GetContext())
+            {
+                c.TitleId = c.Title.Id;
+                c.Title = null;
+                context.Customers.Add(c);
+                context.SaveChanges();
+            }
         }
 
         public void Update(Customer c)
