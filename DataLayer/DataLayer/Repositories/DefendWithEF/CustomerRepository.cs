@@ -44,7 +44,11 @@ namespace DataLayer.Repositories.DefendWithEF
 
         public void Delete(int id)
         {
-            
+            using (var context = this.GetContext())
+            {
+                context.Remove(this.Get(id));
+                context.SaveChanges();
+            }
         }
 
         private CustomerDbContext GetContext()
