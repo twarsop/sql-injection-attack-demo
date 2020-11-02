@@ -27,9 +27,21 @@ namespace DataLayer.Repositories.DefendWithEF
             }
         }
 
-        public List<Customer> Search(Customer c)
+        public List<Customer> Search(Customer searchTerms)
         {
-            return new List<Customer>();
+            using (var context = this.GetContext())
+            {
+                return context.Customers
+                    .Include(c => c.Title)
+                    .Where(c => 
+                        (searchTerms.Title.Id == 0 || c.TitleId == searchTerms.Title.Id)
+                        && (string.IsNullOrEmpty(searchTerms.FirstName) || c.FirstName == searchTerms.FirstName)
+                        && (string.IsNullOrEmpty(searchTerms.LastName) || c.LastName == searchTerms.LastName)
+                        && (string.IsNullOrEmpty(searchTerms.AddressLine1) || c.LastName == searchTerms.AddressLine1)
+                        && (string.IsNullOrEmpty(searchTerms.AddressPostcode) || c.LastName == searchTerms.AddressPostcode)
+                    )
+                    .ToList();
+            }
         }
 
         public void Add(Customer c)
