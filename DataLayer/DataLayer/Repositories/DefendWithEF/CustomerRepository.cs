@@ -45,7 +45,13 @@ namespace DataLayer.Repositories.DefendWithEF
 
         public void Update(Customer c)
         {
-            
+            using (var context = this.GetContext())
+            {
+                c.TitleId = c.Title.Id;
+                c.Title = null;
+                context.Customers.Update(c);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(int id)
