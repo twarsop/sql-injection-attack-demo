@@ -6,7 +6,7 @@ using DataLayer.Interfaces;
 using DataLayer.Models;
 using Npgsql;
 
-namespace DataLayer.Repositories
+namespace DataLayer.Repositories.Attack
 {
     public class CustomerRepository : ICustomerRepository
     {
