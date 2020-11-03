@@ -23,8 +23,8 @@ namespace DataLayer.Repositories.Attack
         }
 
         private readonly ITitleRepository _titleRepository;
-        private readonly string _connstr;
-        private readonly string _tablestr;
+        protected readonly string _connstr;
+        protected readonly string _tablestr;
 
         public CustomerRepository()
         {
@@ -151,7 +151,7 @@ namespace DataLayer.Repositories.Attack
             }
         }
 
-        public void Add(Customer c)
+        public virtual void Add(Customer c)
         {
             var insertSql = "INSERT INTO " + this._tablestr + " (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";
             insertSql += "(" + c.Title.Id.ToString() + ", ";
