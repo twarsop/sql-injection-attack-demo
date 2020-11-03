@@ -63,14 +63,16 @@ namespace DataLayer.Repositories.Attack
 
         public List<Customer> GetAll()
         {
+            var selectSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + ";";
+
             List<Customer> customers = new List<Customer>();
 
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + ";", conn))
+            using (var cmd = new NpgsqlCommand(selectSql, conn))
             {
-                var reader = command.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     customers.Add(this.ParseCustomerFromReader(reader));
