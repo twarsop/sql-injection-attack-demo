@@ -13,6 +13,30 @@ namespace DataLayer.Repositories.DefendWithParameters
             public object Value { get; set; }
         }
 
+        public override Customer Get(int id)
+        {
+            var selectSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + " WHERE id = @id";
+
+            var customer = new Customer();
+
+            var conn = new NpgsqlConnection(this._connstr);
+            conn.Open();
+
+            using (var cmd = new NpgsqlCommand(selectSql, conn))
+            {
+                cmd.Parameters.AddWithValue("id", id);
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    customer = this.ParseCustomerFromReader(reader);
+                }
+            }
+
+            conn.Close();
+
+            return customer;
+        }
+
         public override void Add(Customer c)
         {
             var insertSql = "INSERT INTO " + this._tablestr + " (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";

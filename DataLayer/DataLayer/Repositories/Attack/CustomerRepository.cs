@@ -38,16 +38,18 @@ namespace DataLayer.Repositories.Attack
             _tablestr = "public.customers";
         }
 
-        public Customer Get(int id)
+        public virtual Customer Get(int id)
         {
+            var selectSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + " WHERE id = " + id.ToString();
+
             var customer = new Customer();
 
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + " WHERE id = " + id.ToString(), conn))
+            using (var cmd = new NpgsqlCommand(selectSql, conn))
             {
-                var reader = command.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     customer = this.ParseCustomerFromReader(reader);
@@ -182,7 +184,7 @@ namespace DataLayer.Repositories.Attack
             this.ExecuteNonQuery(deleteSql);
         }
 
-        private Customer ParseCustomerFromReader(NpgsqlDataReader reader)
+        protected Customer ParseCustomerFromReader(NpgsqlDataReader reader)
         {
             List<Title> titles = _titleRepository.GetAll();
             var titleLookup = new Dictionary<int, Title>();
