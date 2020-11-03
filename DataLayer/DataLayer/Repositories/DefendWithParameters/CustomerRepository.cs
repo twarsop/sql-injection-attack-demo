@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using DataLayer.Interfaces;
 using DataLayer.Models;
 using Npgsql;
@@ -10,21 +7,59 @@ namespace DataLayer.Repositories.DefendWithParameters
 {
     public class CustomerRepository : DataLayer.Repositories.Attack.CustomerRepository, ICustomerRepository
     {
+        private class Parameter
+        {
+            public string Name { get; set; }
+            public object Value { get; set; }
+        }
+
         public override void Add(Customer c)
         {
             var insertSql = "INSERT INTO " + this._tablestr + " (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";
             insertSql += "(@titleid, @firstname, @lastname, @addressline1, @addresspostcode);";
 
+            this.ExecuteNonQueryWithParameters(insertSql, GetParametersFromCustomer(c));
+        }
+
+        public override void Update(Customer c)
+        {
+            var updateSql = "UPDATE " + this._tablestr + " SET ";
+            updateSql += "titleid = @titleid, ";
+            updateSql += "firstname = @firstname, ";
+            updateSql += "lastname = @lastname, ";
+            updateSql += "addressline1 = @addressline1, ";
+            updateSql += "addresspostcode = @addresspostcode ";
+            updateSql += "WHERE id = @id";
+
+            var parameters = GetParametersFromCustomer(c);
+            parameters.Add( new Parameter { Name = "id", Value = c.Id });
+
+            this.ExecuteNonQueryWithParameters(updateSql, parameters);
+        }
+
+        private List<Parameter> GetParametersFromCustomer(Customer c)
+        {
+            return new List<Parameter>
+            {
+                new Parameter { Name = "titleid", Value = c.Title.Id },
+                new Parameter { Name = "firstname", Value = c.FirstName },
+                new Parameter { Name = "lastname", Value = c.LastName },
+                new Parameter { Name = "addressline1", Value = c.AddressLine1 },
+                new Parameter { Name = "addresspostcode", Value = c.AddressPostcode }
+            };
+        }
+
+        private void ExecuteNonQueryWithParameters(string sql, List<Parameter> parameters)
+        {
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var cmd = new NpgsqlCommand(insertSql, conn))
+            using (var cmd = new NpgsqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("titleid", c.Title.Id);
-                cmd.Parameters.AddWithValue("firstname", c.FirstName);
-                cmd.Parameters.AddWithValue("lastname", c.LastName);
-                cmd.Parameters.AddWithValue("addressline1", c.AddressLine1);
-                cmd.Parameters.AddWithValue("addresspostcode", c.AddressPostcode);
+                foreach (var parameter in parameters)
+                {
+                    cmd.Parameters.AddWithValue(parameter.Name, parameter.Value);
+                }
                 cmd.ExecuteNonQuery();
             }
 

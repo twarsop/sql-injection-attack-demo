@@ -163,7 +163,7 @@ namespace DataLayer.Repositories.Attack
             this.ExecuteNonQuery(insertSql);
         }
 
-        public void Update(Customer c)
+        public virtual void Update(Customer c)
         {
             var updateSql = "UPDATE " + this._tablestr + " SET ";
             updateSql += "titleid = " + c.Title.Id.ToString() + ", ";
@@ -202,7 +202,7 @@ namespace DataLayer.Repositories.Attack
             };
         }
 
-        private void ExecuteNonQuery(string sql)
+        protected virtual void ExecuteNonQuery(string sql)
         {
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
