@@ -14,6 +14,15 @@ namespace DataLayer.Repositories.Attack
         {
             public string Value { get; set; }
             public SearchTermType Type { get; set; }
+
+            public object CastValueByType()
+            {
+                if (this.Type == SearchTermType.Numeric)
+                {
+                    return System.Convert.ToInt32(this.Value);
+                }
+                return this.Value;
+            }
         }
 
         public enum SearchTermType
@@ -23,8 +32,8 @@ namespace DataLayer.Repositories.Attack
         }
 
         private readonly ITitleRepository _titleRepository;
-        private readonly string _connstr;
-        private readonly string _tablestr;
+        protected readonly string _connstr;
+        protected readonly string _tablestr;
 
         public CustomerRepository()
         {
@@ -38,16 +47,18 @@ namespace DataLayer.Repositories.Attack
             _tablestr = "public.customers";
         }
 
-        public Customer Get(int id)
+        public virtual Customer Get(int id)
         {
+            var selectSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + " WHERE id = " + id.ToString();
+
             var customer = new Customer();
 
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + " WHERE id = " + id.ToString(), conn))
+            using (var cmd = new NpgsqlCommand(selectSql, conn))
             {
-                var reader = command.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     customer = this.ParseCustomerFromReader(reader);
@@ -61,14 +72,16 @@ namespace DataLayer.Repositories.Attack
 
         public List<Customer> GetAll()
         {
+            var selectSql = "SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + ";";
+
             List<Customer> customers = new List<Customer>();
 
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand("SELECT id, titleid, firstname, lastname, addressline1, addresspostcode FROM " + this._tablestr + ";", conn))
+            using (var cmd = new NpgsqlCommand(selectSql, conn))
             {
-                var reader = command.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     customers.Add(this.ParseCustomerFromReader(reader));
@@ -80,7 +93,7 @@ namespace DataLayer.Repositories.Attack
             return customers;
         }
 
-        public List<Customer> Search(Customer c)
+        public virtual List<Customer> Search(Customer c)
         {
             var searchTerms = new Dictionary<string, SearchTermValue>();
             
@@ -121,9 +134,9 @@ namespace DataLayer.Repositories.Attack
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand(searchSql, conn))
+            using (var cmd = new NpgsqlCommand(searchSql, conn))
             {
-                var reader = command.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     customers.Add(this.ParseCustomerFromReader(reader));
@@ -135,7 +148,7 @@ namespace DataLayer.Repositories.Attack
             return customers;
         }
 
-        private void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, int value)
+        protected void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, int value)
         {
             if (value != 0)
             {
@@ -143,7 +156,7 @@ namespace DataLayer.Repositories.Attack
             }
         }
 
-        private void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, string value)
+        protected void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, string value)
         {
             if (!string.IsNullOrEmpty(value))
             {
@@ -151,7 +164,7 @@ namespace DataLayer.Repositories.Attack
             }
         }
 
-        public void Add(Customer c)
+        public virtual void Add(Customer c)
         {
             var insertSql = "INSERT INTO " + this._tablestr + " (titleid, firstname, lastname, addressline1, addresspostcode) VALUES ";
             insertSql += "(" + c.Title.Id.ToString() + ", ";
@@ -163,7 +176,7 @@ namespace DataLayer.Repositories.Attack
             this.ExecuteNonQuery(insertSql);
         }
 
-        public void Update(Customer c)
+        public virtual void Update(Customer c)
         {
             var updateSql = "UPDATE " + this._tablestr + " SET ";
             updateSql += "titleid = " + c.Title.Id.ToString() + ", ";
@@ -176,13 +189,13 @@ namespace DataLayer.Repositories.Attack
             this.ExecuteNonQuery(updateSql);
         }
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             var deleteSql = "DELETE FROM " + this._tablestr + " WHERE id = " + id.ToString();
             this.ExecuteNonQuery(deleteSql);
         }
 
-        private Customer ParseCustomerFromReader(NpgsqlDataReader reader)
+        protected Customer ParseCustomerFromReader(NpgsqlDataReader reader)
         {
             List<Title> titles = _titleRepository.GetAll();
             var titleLookup = new Dictionary<int, Title>();
@@ -202,7 +215,7 @@ namespace DataLayer.Repositories.Attack
             };
         }
 
-        private void ExecuteNonQuery(string sql)
+        protected virtual void ExecuteNonQuery(string sql)
         {
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
