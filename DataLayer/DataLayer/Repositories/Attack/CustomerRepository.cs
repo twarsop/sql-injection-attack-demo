@@ -14,6 +14,15 @@ namespace DataLayer.Repositories.Attack
         {
             public string Value { get; set; }
             public SearchTermType Type { get; set; }
+
+            public object CastValueByType()
+            {
+                if (this.Type == SearchTermType.Numeric)
+                {
+                    return System.Convert.ToInt32(this.Value);
+                }
+                return this.Value;
+            }
         }
 
         public enum SearchTermType
@@ -84,7 +93,7 @@ namespace DataLayer.Repositories.Attack
             return customers;
         }
 
-        public List<Customer> Search(Customer c)
+        public virtual List<Customer> Search(Customer c)
         {
             var searchTerms = new Dictionary<string, SearchTermValue>();
             
@@ -125,9 +134,9 @@ namespace DataLayer.Repositories.Attack
             var conn = new NpgsqlConnection(this._connstr);
             conn.Open();
 
-            using (var command = new NpgsqlCommand(searchSql, conn))
+            using (var cmd = new NpgsqlCommand(searchSql, conn))
             {
-                var reader = command.ExecuteReader();
+                var reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     customers.Add(this.ParseCustomerFromReader(reader));
@@ -139,7 +148,7 @@ namespace DataLayer.Repositories.Attack
             return customers;
         }
 
-        private void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, int value)
+        protected void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, int value)
         {
             if (value != 0)
             {
@@ -147,7 +156,7 @@ namespace DataLayer.Repositories.Attack
             }
         }
 
-        private void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, string value)
+        protected void AppendSearchTermValue(Dictionary<string, SearchTermValue> searchTerms, string key, string value)
         {
             if (!string.IsNullOrEmpty(value))
             {
