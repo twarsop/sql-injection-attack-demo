@@ -180,7 +180,7 @@ namespace DataLayer.Repositories.Attack
             this.ExecuteNonQuery(updateSql);
         }
 
-        public void Delete(int id)
+        public virtual void Delete(int id)
         {
             var deleteSql = "DELETE FROM " + this._tablestr + " WHERE id = " + id.ToString();
             this.ExecuteNonQuery(deleteSql);

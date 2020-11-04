@@ -61,6 +61,13 @@ namespace DataLayer.Repositories.DefendWithParameters
             this.ExecuteNonQueryWithParameters(updateSql, parameters);
         }
 
+        public override void Delete(int id)
+        {
+            var deleteSql = "DELETE FROM " + this._tablestr + " WHERE id = @id;";
+            
+            this.ExecuteNonQueryWithParameters(deleteSql, new List<Parameter> { new Parameter { Name = "id", Value = id } });
+        }
+
         private List<Parameter> GetParametersFromCustomer(Customer c)
         {
             return new List<Parameter>
