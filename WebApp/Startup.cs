@@ -24,8 +24,8 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<ITitleRepository, DataLayer.Repositories.DefendWithParameters.TitleRepository>();
-            services.AddScoped<ICustomerRepository, DataLayer.Repositories.DefendWithParameters.CustomerRepository>();
+            services.AddScoped<ITitleRepository, DataLayer.Repositories.Attack.TitleRepository>();
+            services.AddScoped<ICustomerRepository, DataLayer.Repositories.Attack.CustomerRepository>();
 
             services.AddControllersWithViews();
         }
